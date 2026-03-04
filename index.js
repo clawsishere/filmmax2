@@ -26,206 +26,186 @@ function saveDB(data) {
 }
 
 app.get('/', (req, res) => {
-  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#111}
 
 /* Screens */
 .screen{display:none}
 .screen.active{display:flex}
 
 /* Auth */
-.auth-screen{width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at top,#ffffff 0,#f0f2f5 60%,#e2e5ea 100%)}
-.auth-box{width:100%;max-width:380px;padding:56px 40px;background:#fff;border-radius:16px;border:1px solid #e0e0e0;text-align:center;box-shadow:0 16px 40px rgba(0,0,0,0.08)}
-.auth-box h1{font-size:32px;margin-bottom:8px;font-weight:700;letter-spacing:-0.5px}
-.auth-tagline{color:#777;font-size:13px;margin-bottom:24px}
-.auth-sub{color:#aaa;font-size:11px;margin-bottom:28px}
+.auth-screen{width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f5f5f5}
+.auth-box{width:100%;max-width:360px;padding:40px 32px;background:#fff;border-radius:4px;border:1px solid #ddd;text-align:center}
+.auth-box h1{font-size:24px;margin-bottom:8px;font-weight:600;letter-spacing:-0.3px}
+.auth-tagline{color:#666;font-size:13px;margin-bottom:20px}
 .form-group{margin-bottom:20px;text-align:left}
-.form-group label{display:block;font-size:11px;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px;color:#777}
-.form-group input{width:100%;padding:14px 12px;background:#fafafa;border-radius:8px;border:1px solid #e0e0e0;color:#1a1a1a;font-size:14px}
-.form-group input:focus{outline:0;border-color:#000;background:#fff}
-.auth-btn{width:100%;padding:14px;background:#000;border-radius:999px;border:1px solid #000;color:#fff;font-weight:600;font-size:13px;cursor:pointer;text-transform:uppercase;letter-spacing:0.7px}
-.auth-btn:hover{background:#1a1a1a}
+.form-group label{display:block;font-size:11px;font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px;color:#777}
+.form-group input{width:100%;padding:10px 9px;background:#fafafa;border-radius:3px;border:1px solid #d0d0d0;color:#111;font-size:14px}
+.form-group input:focus{outline:0;border-color:#111;background:#fff}
+.auth-btn{width:100%;padding:10px;background:#111;border-radius:3px;border:1px solid #111;color:#fff;font-weight:500;font-size:13px;cursor:pointer;text-transform:uppercase;letter-spacing:0.7px}
+.auth-btn:hover{background:#000}
 .auth-hint{margin-top:10px;font-size:11px;color:#999}
 
 /* Layout */
 .app-container{display:flex;width:100%;height:100vh}
 
 /* Sidebar */
-.sidebar{width:260px;background:#ffffff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
-.sidebar-header{padding:18px 20px;border-bottom:1px solid #e0e0e0;display:flex;flex-direction:column;gap:4px}
-.sidebar-title-row{display:flex;justify-content:space-between;align-items:center}
-.sidebar-header h2{font-size:16px;font-weight:700;letter-spacing:-0.5px}
-.sidebar-badge{font-size:10px;padding:3px 8px;border-radius:999px;background:#f0f2ff;color:#4a56e2;font-weight:600;text-transform:uppercase;letter-spacing:0.6px}
-.sidebar-sub{font-size:11px;color:#888}
-
+.sidebar{width:240px;background:#fff;border-right:1px solid #ddd;display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:14px 16px;border-bottom:1px solid #ddd}
+.sidebar-header h2{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+.sidebar-sub{font-size:11px;color:#777;margin-top:4px}
 .sidebar-nav{display:flex;gap:6px;margin-top:10px}
-.sidebar-nav button{flex:1;padding:8px 6px;border-radius:999px;border:1px solid #e0e0e0;background:#fafafa;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
-.sidebar-nav button.active{background:#000;color:#fff;border-color:#000}
+.sidebar-nav button{flex:1;padding:7px 6px;border-radius:3px;border:1px solid #ddd;background:#f6f6f6;font-size:11px;font-weight:500;cursor:pointer}
+.sidebar-nav button.active{background:#111;color:#fff;border-color:#111}
 
-.sidebar-content{flex:1;padding:12px;overflow-y:auto}
-.projects-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 4px}
-.projects-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.8px}
-.projects-count{font-size:10px;color:#aaa}
+/* Sidebar content */
+.sidebar-content{flex:1;padding:10px 12px;overflow-y:auto}
+.projects-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 2px}
+.projects-label{font-size:10px;font-weight:600;color:#777;text-transform:uppercase;letter-spacing:0.6px}
+.projects-count{font-size:10px;color:#999}
 .project-search{margin-bottom:8px}
-.project-search input{width:100%;padding:8px 9px;border-radius:999px;border:1px solid #e0e0e0;font-size:11px;background:#fafafa}
-.project-search input:focus{outline:0;border-color:#000;background:#fff}
-
+.project-search input{width:100%;padding:7px 8px;border-radius:999px;border:1px solid #ddd;font-size:11px;background:#fafafa}
+.project-search input:focus{outline:0;border-color:#111;background:#fff}
 .sidebar-projects{display:flex;flex-direction:column;gap:4px}
-.sidebar-btn{width:100%;padding:9px 10px;background:#fafafa;border-radius:8px;border:1px solid #e0e0e0;color:#1a1a1a;font-size:12px;font-weight:500;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
-.sidebar-btn:hover{background:#f3f3f3}
-.sidebar-btn.active{background:#000;color:#fff;border-color:#000}
+.sidebar-btn{width:100%;padding:8px 9px;background:#fafafa;border-radius:3px;border:1px solid #ddd;color:#111;font-size:12px;font-weight:500;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.sidebar-btn:hover{background:#f0f0f0}
+.sidebar-btn.active{background:#111;color:#fff;border-color:#111}
 .sidebar-btn span{font-size:10px;opacity:.8}
 
-.sidebar-footer{margin-top:auto;padding:10px 12px;border-top:1px solid #e0e0e0;display:flex;gap:8px}
-.sidebar-footer button{flex:1;padding:10px 10px;border-radius:999px;border:1px solid #e0e0e0;background:#fafafa;font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase}
-.sidebar-footer button:first-child{background:#000;color:#fff;border-color:#000}
-.sidebar-footer button:hover{background:#f0f0f0}
+/* Sidebar footer */
+.sidebar-footer{margin-top:auto;padding:10px 12px;border-top:1px solid #ddd;display:flex;gap:8px}
+.sidebar-footer button{flex:1;padding:8px 8px;border-radius:3px;border:1px solid #ddd;background:#f6f6f6;font-size:11px;font-weight:500;cursor:pointer;text-transform:uppercase}
+.sidebar-footer button:first-child{background:#111;color:#fff;border-color:#111}
+.sidebar-footer button:hover{background:#eee}
 
 /* Main */
-.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f0f2f5}
-.header{padding:14px 20px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f5f5f5}
+.header{padding:12px 18px;background:#fff;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}
 .header-left{display:flex;flex-direction:column;gap:2px}
-.header-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px}
-.header-breadcrumb{font-size:11px;color:#888}
+.header-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.header-breadcrumb{font-size:11px;color:#777}
 .header-actions{display:flex;gap:8px}
-.btn{padding:9px 13px;background:#000;border-radius:999px;border:1px solid #000;color:#fff;font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px}
-.btn.secondary{background:#fafafa;color:#111;border-color:#e0e0e0}
-.btn.secondary:hover{background:#f0f0f0}
-.btn:hover{background:#111}
+.btn{padding:8px 11px;background:#111;border-radius:3px;border:1px solid #111;color:#fff;font-size:11px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.4px}
+.btn.secondary{background:#f6f6f6;color:#111;border-color:#ddd}
+.btn.secondary:hover{background:#eee}
+.btn:hover{background:#000}
 
-/* Content */
-.content{flex:1;overflow:hidden;background:#f0f2f5;display:flex;flex-direction:column}
+/* Content wrapper */
+.content{flex:1;overflow:hidden;background:#f5f5f5;display:flex;flex-direction:column}
 
 /* Dashboard */
-.dashboard{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
-.dashboard-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.welcome-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;padding:18px 16px;display:flex;flex-direction:column;gap:8px}
-.welcome-card h3{font-size:13px;font-weight:700}
-.welcome-card p{font-size:11px;color:#666}
-.welcome-steps{margin-top:4px;font-size:11px;color:#555}
-.welcome-steps li{margin-left:14px;margin-bottom:4px}
-
-.hint-card{background:#fff;border-radius:12px;border:1px dashed #d0d4dd;padding:14px 14px;font-size:11px;color:#666}
+.dashboard{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.dashboard-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.welcome-card,.hint-card{background:#fff;border-radius:3px;border:1px solid #ddd;padding:12px 12px;font-size:11px;color:#555}
+.welcome-card h3{font-size:13px;font-weight:600;margin-bottom:4px}
+.welcome-steps li{margin-left:14px;margin-bottom:3px}
 
 /* Projects grid */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.project-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;padding:14px 14px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
-.project-card:hover{border-color:#a2a7b3}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.project-card{background:#fff;border-radius:3px;border:1px solid #ddd;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.project-card:hover{border-color:#999}
 .project-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
-.project-card h4{font-size:13px;font-weight:700}
-.project-chip{font-size:10px;padding:2px 8px;border-radius:999px;background:#f0f2ff;color:#4a56e2;font-weight:600}
+.project-card h4{font-size:13px;font-weight:600}
+.project-chip{font-size:10px;padding:2px 6px;border-radius:2px;background:#f0f0f0;color:#555;font-weight:500}
 .project-meta{font-size:10px;color:#999}
-.project-card-actions{display:flex;gap:6px;margin-top:6px}
-.project-card-actions button{flex:1;padding:6px 0;border-radius:999px;background:#fafafa;border:1px solid #e0e0e0;color:#1a1a1a;font-size:9px;cursor:pointer;text-transform:uppercase}
-.project-card-actions button:hover{background:#f3f3f3}
+.project-card-actions{display:flex;gap:6px;margin-top:4px}
+.project-card-actions button{flex:1;padding:5px 0;border-radius:2px;background:#f6f6f6;border:1px solid #ddd;color:#111;font-size:9px;cursor:pointer;text-transform:uppercase}
+.project-card-actions button:hover{background:#eee}
 
 /* Tabs */
-.tabs{display:flex;gap:0;border-bottom:1px solid #e0e0e0;background:#fff;padding:0 20px}
-.tab{padding:11px 14px;background:transparent;border:none;border-bottom:2px solid transparent;color:#999;font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:6px}
-.tab span.icon{font-size:13px}
-.tab.active{color:#000;border-bottom-color:#000}
+.tabs{display:flex;gap:0;border-bottom:1px solid #ddd;background:#fff;padding:0 16px}
+.tab{padding:9px 10px;background:transparent;border:none;border-bottom:2px solid transparent;color:#777;font-size:11px;font-weight:500;cursor:pointer;text-transform:uppercase}
+.tab.active{color:#111;border-bottom-color:#111}
 
-/* Scripts layout (Word-like page) */
-#scriptsTab{display:flex;flex:1}
-.stage-bg{flex:1;display:flex;align-items:stretch;justify-content:center;padding:24px 0;background:linear-gradient(to bottom,#f0f2f5 0,#e2e4ea 60%,#d9dce4 100%)}
-.screenplay-wrapper{display:flex;width:100%;max-width:1280px;overflow:hidden;background:transparent;gap:16px}
-.screenplay-sidebar{width:210px;background:#ffffff;border-radius:12px;border:1px solid #e0e0e0;display:flex;flex-direction:column;overflow:hidden}
-.screenplay-sidebar-header{padding:10px 12px;border-bottom:1px solid #e0e0e0}
-.screenplay-sidebar-header h4{font-size:10px;font-weight:700;text-transform:uppercase;color:#666}
-.scenes-list{flex:1;overflow-y:auto}
-.scene-item{padding:8px 12px;font-size:10px;color:#555;border-bottom:1px solid #f3f3f3;cursor:pointer}
-.scene-item:hover{background:#f7f7f7}
+/* Save indicator */
+.save-indicator{font-size:9px;color:#777;padding:6px 16px;background:#f5f5f5;border-bottom:1px solid #ddd}
 
-/* Page */
-.screenplay-editor{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
-.page-label{font-size:11px;color:#777;margin-top:2px}
-.screenplay-controls{width:100%;max-width:900px;padding:8px 12px;border-radius:10px;background:#ffffff;border:1px solid #e0e0e0;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.screenplay-controls button{padding:6px 9px;background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;color:#1a1a1a;font-size:9px;font-weight:600;cursor:pointer;text-transform:uppercase}
-.screenplay-controls button:hover{background:#f3f3f3}
-.screenplay-text{flex:1;width:100%;max-width:900px;margin:0 auto 24px auto;background:#ffffff;color:#1a1a1a;padding:40px 60px;border:none;font-family:'Courier New',monospace;font-size:12px;line-height:1.9;resize:none;overflow-y:auto;box-shadow:0 0 0 1px #dedede,0 18px 45px rgba(0,0,0,0.08);border-radius:10px}
-.screenplay-text:focus{outline:0}
-.screenplay-text::placeholder{color:#ccc}
+/* Scripts: upload-only */
+#scriptsTab{display:flex;flex:1;flex-direction:column}
+.scripts-header{padding:12px 16px;background:#fff;border-bottom:1px solid #ddd;font-size:12px;font-weight:600}
+.scripts-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.scripts-actions{display:flex;align-items:center;gap:10px}
+.scripts-hint{font-size:11px;color:#777}
+.scripts-list{margin-top:6px;border-top:1px solid #ddd}
+.script-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #eee;font-size:11px}
+.script-name{font-weight:500}
+.script-meta{font-size:10px;color:#777}
+.script-actions{display:flex;gap:6px}
 
-/* Tables */
+/* Table shared */
 .data-table{width:100%;border-collapse:collapse;background:#fff}
-.data-table th{background:#fafafa;padding:10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #e0e0e0;color:#999}
-.data-table td{padding:10px;border-bottom:1px solid #e0e0e0;font-size:11px}
-.data-table input{width:100%;background:transparent;border:none;color:#1a1a1a;font-size:11px}
+.data-table th{background:#fafafa;padding:8px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;border-bottom:1px solid #ddd;color:#777}
+.data-table td{padding:8px;border-bottom:1px solid #eee;font-size:11px}
+.data-table input{width:100%;background:transparent;border:none;color:#111;font-size:11px}
 .data-table input:focus{outline:0;background:#fafafa}
 
 /* Storyboards */
-#storyboardsTab{flex:1;overflow-y:auto}
-.storyboards-toolbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:#fff;border-bottom:1px solid #e0e0e0}
-.storyboards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:20px}
-.storyboard-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;overflow:hidden}
-.storyboard-image{width:100%;aspect-ratio:16/9;background:#fafafa;display:flex;align-items:center;justify-content:center;cursor:pointer;border-bottom:1px solid #e0e0e0}
+#storyboardsTab,#budgetTab,#shootingTab,#chatTab{flex:1;flex-direction:column}
+.storyboards-toolbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#fff;border-bottom:1px solid #ddd}
+.storyboards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:14px 16px}
+.storyboard-card{background:#fff;border-radius:3px;border:1px solid #ddd;overflow:hidden}
+.storyboard-image{width:100%;aspect-ratio:16/9;background:#f6f6f6;display:flex;align-items:center;justify-content:center;cursor:pointer;border-bottom:1px solid #eee;font-size:11px;color:#777}
 .storyboard-image img{width:100%;height:100%;object-fit:cover}
-.storyboard-notes{padding:12px}
-.storyboard-notes textarea{width:100%;background:#fafafa;color:#1a1a1a;padding:8px;border-radius:8px;border:1px solid #e0e0e0;font-size:10px;min-height:50px;font-family:inherit}
-.storyboard-notes textarea:focus{outline:0;border-color:#000;background:#fff}
+.storyboard-notes{padding:8px}
+.storyboard-notes textarea{width:100%;background:#fafafa;color:#111;padding:6px;border-radius:3px;border:1px solid #ddd;font-size:10px;min-height:50px;font-family:inherit}
+.storyboard-notes textarea:focus{outline:0;border-color:#111;background:#fff}
 
 /* Budget / Shooting */
-#budgetTab,#shootingTab{flex:1;flex-direction:column}
-.budget-header{padding:16px 20px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
-.budget-currency{padding:8px 12px;background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;font-size:11px}
-.budget-total{padding:12px 20px;background:#f7f7f7;border-bottom:1px solid #e0e0e0;font-weight:700;font-size:12px;display:flex;justify-content:space-between}
-.delete-btn{background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;color:#999;padding:4px 8px;font-size:9px;cursor:pointer;text-transform:uppercase}
-.delete-btn:hover{background:#f3f3f3}
+.budget-header{padding:12px 16px;background:#fff;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}
+.budget-currency{padding:6px 9px;background:#fafafa;border-radius:3px;border:1px solid #ddd;font-size:11px}
+.budget-total{padding:10px 16px;background:#f5f5f5;border-bottom:1px solid #ddd;font-weight:600;font-size:12px;display:flex;justify-content:space-between}
+.delete-btn{background:#f6f6f6;border-radius:2px;border:1px solid #ddd;color:#777;padding:3px 6px;font-size:9px;cursor:pointer;text-transform:uppercase}
+.delete-btn:hover{background:#eee}
 
 /* Chat */
-#chatTab{flex:1;flex-direction:column}
-.chat-container{display:flex;flex-direction:column;height:100%;padding:18px 20px;gap:8px}
+.chat-container{display:flex;flex-direction:column;height:100%;padding:14px 16px;gap:8px}
 .chat-header-row{display:flex;justify-content:space-between;align-items:center}
-.chat-title{font-size:13px;font-weight:700}
+.chat-title{font-size:12px;font-weight:600}
 .chat-sub{font-size:11px;color:#777}
-.chat-scope-toggle{display:flex;gap:8px;margin-top:8px}
-.chat-scope-toggle button{flex:0 0 auto;padding:6px 10px;font-size:10px;border-radius:999px;border:1px solid #e0e0e0;background:#fafafa;color:#333;cursor:pointer;text-transform:uppercase;font-weight:600;letter-spacing:0.5px}
-.chat-scope-toggle button.active{background:#000;color:#fff;border-color:#000}
-.chat-help{font-size:10px;color:#888;margin-top:4px}
-
-.messages-area{flex:1;overflow-y:auto;margin-top:6px;margin-bottom:10px;background:#fff;padding:14px;border-radius:10px;border:1px solid #e0e0e0}
-.message-item{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
-.message-text{font-size:12px;color:#1a1a1a;margin-bottom:6px;word-break:break-word}
-.message-file{display:inline-block;padding:7px 10px;background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;font-size:10px;text-decoration:none;color:#000;margin:4px 0;cursor:pointer}
-.message-file:hover{background:#f3f3f3}
-.message-meta{font-size:9px;color:#999}
-
-.input-area{background:#fff;border-radius:10px;border:1px solid #e0e0e0;padding:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
-.message-input{flex:1;padding:9px 10px;border-radius:8px;border:1px solid #e0e0e0;background:#fafafa;font-size:12px;min-height:40px}
-.file-preview{padding:6px 10px;background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;font-size:10px;display:flex;justify-content:space-between;align-items:center;width:100%}
-.file-preview button{background:transparent;border:none;color:#999;cursor:pointer;font-weight:700}
-.attach-btn{padding:9px 11px;background:#fafafa;border-radius:999px;border:1px solid #e0e0e0;cursor:pointer;font-size:11px;font-weight:600}
-.send-btn{padding:9px 13px;background:#000;border-radius:999px;border:1px solid #000;color:#fff;cursor:pointer;font-size:11px;font-weight:600}
-.save-indicator{font-size:9px;color:#999;padding:6px;text-align:center}
+.chat-scope-toggle{display:flex;gap:8px;margin-top:6px}
+.chat-scope-toggle button{flex:0 0 auto;padding:5px 9px;font-size:10px;border-radius:999px;border:1px solid #ddd;background:#f6f6f6;color:#333;cursor:pointer;text-transform:uppercase;font-weight:500}
+.chat-scope-toggle button.active{background:#111;color:#fff;border-color:#111}
+.chat-help{font-size:10px;color:#777;margin-top:3px}
+.messages-area{flex:1;overflow-y:auto;margin-top:6px;margin-bottom:8px;background:#fff;padding:10px;border-radius:3px;border:1px solid #ddd}
+.message-item{margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #eee}
+.message-text{font-size:11px;color:#111;margin-bottom:4px;word-break:break-word}
+.message-file{display:inline-block;padding:5px 8px;background:#f6f6f6;border-radius:999px;border:1px solid #ddd;font-size:10px;text-decoration:none;color:#111;margin:3px 0;cursor:pointer}
+.message-file:hover{background:#eee}
+.message-meta{font-size:9px;color:#777}
+.input-area{background:#fff;border-radius:3px;border:1px solid #ddd;padding:9px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
+.message-input{flex:1;padding:7px 8px;border-radius:3px;border:1px solid #ddd;background:#fafafa;font-size:12px;min-height:36px}
+.file-preview{padding:5px 8px;background:#fafafa;border-radius:999px;border:1px solid #ddd;font-size:10px;display:flex;justify-content:space-between;align-items:center;width:100%}
+.file-preview button{background:transparent;border:none;color:#777;cursor:pointer;font-weight:600}
+.attach-btn{padding:7px 9px;background:#f6f6f6;border-radius:3px;border:1px solid #ddd;cursor:pointer;font-size:11px;font-weight:500}
+.send-btn{padding:7px 10px;background:#111;border-radius:3px;border:1px solid #111;color:#fff;cursor:pointer;font-size:11px;font-weight:500}
 
 /* Misc */
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:#f5f5f5}
-::-webkit-scrollbar-thumb{background:#d0d0d0;border-radius:4px}
+::-webkit-scrollbar-thumb{background:#cfcfcf;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#999}
 input[type="file"]{display:none}
-.empty-text{font-size:11px;color:#999}
+.empty-text{font-size:11px;color:#777}
 
-/* Simple settings/help */
-#settingsView{display:none;flex:1;overflow-y:auto;padding:20px}
-.settings-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;padding:16px 18px;margin-bottom:12px;font-size:11px;color:#555}
-.settings-card h3{font-size:13px;margin-bottom:6px}
+/* Settings */
+#settingsView{display:none;flex:1;overflow-y:auto;padding:16px}
+.settings-card{background:#fff;border-radius:3px;border:1px solid #ddd;padding:12px 13px;margin-bottom:10px;font-size:11px;color:#555}
+.settings-card h3{font-size:13px;margin-bottom:4px}
 </style></head><body>
 
 <div id="authScreen" class="screen active">
   <div class="auth-screen">
     <div class="auth-box">
       <h1>MAXFILM</h1>
-      <div class="auth-tagline">Production & Script Workspace</div>
-      <div class="auth-sub">Enter your production room password to continue.</div>
+      <div class="auth-tagline">Producing & Production Management</div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter password" onkeypress="if(event.key==='Enter') app.login()">
       </div>
-      <button class="auth-btn" onclick="app.login()">Enter workspace</button>
-      <div class="auth-hint">Hint: default password is <b>MAX</b> (you can change this later in the code).</div>
+      <button class="auth-btn" onclick="app.login()">Enter</button>
+      <div class="auth-hint">Default password is <b>MAX</b>. Change it in the code.</div>
     </div>
   </div>
 </div>
@@ -235,14 +215,11 @@ input[type="file"]{display:none}
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
-        <div class="sidebar-title-row">
-          <h2>MAXFILM</h2>
-          <span class="sidebar-badge">BETA</span>
-        </div>
-        <div class="sidebar-sub">Your production control room</div>
+        <h2>MAXFILM</h2>
+        <div class="sidebar-sub">Projects, budgets and schedule</div>
         <div class="sidebar-nav">
-          <button id="navDashboard" class="active" onclick="app.showMainView('dashboard')">🏠 Dashboard</button>
-          <button id="navSettings" onclick="app.showMainView('settings')">❓ Help</button>
+          <button id="navDashboard" class="active" onclick="app.showMainView('dashboard')">Dashboard</button>
+          <button id="navSettings" onclick="app.showMainView('settings')">Help</button>
         </div>
       </div>
 
@@ -251,106 +228,86 @@ input[type="file"]{display:none}
           <span class="projects-label">Projects</span>
           <span class="projects-count" id="projectsCountLabel">0</span>
         </div>
-
         <div class="project-search">
-          <input id="projectSearchInput" type="text" placeholder="Search projects…" oninput="app.filterProjects()">
+          <input id="projectSearchInput" type="text" placeholder="Search projects" oninput="app.filterProjects()">
         </div>
-
         <div class="sidebar-projects" id="projectsList"></div>
       </div>
 
       <div class="sidebar-footer">
-        <button onclick="app.openNewProjectModal()">+ New</button>
+        <button onclick="app.openNewProjectModal()">New</button>
         <button onclick="app.logout()">Logout</button>
       </div>
     </div>
 
     <!-- Main -->
     <div class="main-content">
-      <!-- Header -->
       <div class="header">
         <div class="header-left">
           <div class="header-title" id="headerTitle">Dashboard</div>
-          <div class="header-breadcrumb" id="headerBreadcrumb">Overview of all projects</div>
+          <div class="header-breadcrumb" id="headerBreadcrumb">All projects</div>
         </div>
         <div class="header-actions">
-          <button class="btn secondary" onclick="app.openNewProjectModal()">+ New Project</button>
-          <button class="btn secondary" onclick="app.showMainView('dashboard')">🏠 Projects</button>
+          <button class="btn secondary" onclick="app.openNewProjectModal()">New Project</button>
+          <button class="btn secondary" onclick="app.showMainView('dashboard')">Projects</button>
         </div>
       </div>
 
-      <!-- Save bar -->
-      <div class="save-indicator" id="saveIndicator">Changes auto-save while you edit.</div>
+      <div class="save-indicator" id="saveIndicator">Auto-saving while you work.</div>
 
-      <!-- Main views -->
       <div class="content">
-        <!-- Dashboard view -->
+        <!-- Dashboard -->
         <div id="dashboardView" style="display:flex;flex:1;flex-direction:column">
           <div class="dashboard">
             <div class="dashboard-row">
               <div class="welcome-card">
-                <h3>Welcome to MaxFilm</h3>
-                <p>Everything for your production in one place: scripts, breakdowns, boards, budget, schedule and chat.</p>
+                <h3>Producing overview</h3>
+                <p>Use MaxFilm to keep track of projects, scripts, budgets, days and notes in one place.</p>
                 <ul class="welcome-steps">
-                  <li>Create a project from the left sidebar.</li>
-                  <li>Open it and start writing in the Script tab.</li>
-                  <li>Use Chat to keep notes per project or in the public room.</li>
+                  <li>Create a project.</li>
+                  <li>Upload finished scripts and key materials.</li>
+                  <li>Use budget, shooting days and chat as things move.</li>
                 </ul>
               </div>
               <div class="hint-card">
-                <b>Quick tip</b><br>
-                Tabs along the top of a project follow your workflow: <b>Scripts → Storyboards → Budget → Shooting → Chat</b>.
+                Start with a rough plan and budget. Update as locations, cast and schedule change.
               </div>
             </div>
 
-            <div style="font-size:12px;font-weight:600;margin-top:8px;">All projects</div>
-            <div id="allProjects" class="projects-grid" style="margin-top:6px;"></div>
+            <div style="font-size:12px;font-weight:600;margin-top:6px;">All projects</div>
+            <div id="allProjects" class="projects-grid" style="margin-top:4px;"></div>
           </div>
         </div>
 
-        <!-- Editor view -->
+        <!-- Editor -->
         <div id="editorView" style="display:none;flex:1;flex-direction:column">
           <div class="tabs">
-            <button class="tab active" onclick="app.switchTab('scripts')"><span class="icon">📄</span><span>Scripts</span></button>
-            <button class="tab" onclick="app.switchTab('storyboards')"><span class="icon">🎬</span><span>Storyboards</span></button>
-            <button class="tab" onclick="app.switchTab('budget')"><span class="icon">💰</span><span>Budget</span></button>
-            <button class="tab" onclick="app.switchTab('shooting')"><span class="icon">📅</span><span>Shooting</span></button>
-            <button class="tab" onclick="app.switchTab('chat')"><span class="icon">💬</span><span>Chat</span></button>
+            <button class="tab active" onclick="app.switchTab('scripts')">Scripts</button>
+            <button class="tab" onclick="app.switchTab('storyboards')">Storyboards</button>
+            <button class="tab" onclick="app.switchTab('budget')">Budget</button>
+            <button class="tab" onclick="app.switchTab('shooting')">Shooting</button>
+            <button class="tab" onclick="app.switchTab('chat')">Chat</button>
           </div>
 
           <div class="content">
-            <!-- Scripts -->
+            <!-- Scripts: upload/download only -->
             <div id="scriptsTab">
-              <div class="stage-bg">
-                <div class="screenplay-wrapper">
-                  <div class="screenplay-sidebar">
-                    <div class="screenplay-sidebar-header">
-                      <h4>Scene list</h4>
-                    </div>
-                    <div id="scenesList" class="scenes-list"></div>
-                  </div>
-                  <div class="screenplay-editor">
-                    <div class="page-label">Script for <span id="scriptProjectTitle">Project</span></div>
-                    <div class="screenplay-controls">
-                      <span style="font-size:10px;color:#777;margin-right:8px;">Insert:</span>
-                      <button onclick="app.insertScene('EXT')">EXT</button>
-                      <button onclick="app.insertScene('INT')">INT</button>
-                      <button onclick="app.insertScene('ACTION')">Action</button>
-                      <button onclick="app.insertScene('CHARACTER')">Character</button>
-                      <button onclick="app.insertScene('DIALOGUE')">Dialogue</button>
-                      <button onclick="app.insertScene('PAREN')">Paren</button>
-                    </div>
-                    <textarea id="scriptText" class="screenplay-text" placeholder="Fade in..." oninput="app.onScriptChange()"></textarea>
-                  </div>
+              <div class="scripts-header">Script files</div>
+              <div class="scripts-body">
+                <div class="scripts-actions">
+                  <button class="btn secondary" onclick="document.getElementById('scriptFileInput').click()">Upload script file</button>
+                  <input type="file" id="scriptFileInput" accept=".pdf,.fdx,.fdr,.doc,.docx,.txt" onchange="app.handleScriptUpload()">
                 </div>
+                <div class="scripts-hint">Attach finished screenplay files from your writing tool. Files stay attached to this project and can be downloaded.</div>
+                <div class="scripts-list" id="scriptsList"></div>
               </div>
             </div>
 
-            <!-- Storyboards -->
+            <!-- Storyboards / references -->
             <div id="storyboardsTab" style="display:none">
               <div class="storyboards-toolbar">
-                <div style="font-size:12px;font-weight:600;">Storyboard frames</div>
-                <button class="btn secondary" onclick="app.addStoryboard()">+ Add frame</button>
+                <div style="font-size:12px;font-weight:600;">Visual references</div>
+                <button class="btn secondary" onclick="app.addStoryboard()">Add frame</button>
               </div>
               <div class="storyboards-grid" id="storyboardsList"></div>
             </div>
@@ -380,12 +337,12 @@ input[type="file"]{display:none}
                 <span>Total</span>
                 <span><span id="currencySymbol">kr</span> <span id="budgetTotal">0.00</span></span>
               </div>
-              <button class="btn secondary" style="margin:10px 20px 16px 20px" onclick="app.addBudgetLine()">+ Add line</button>
+              <button class="btn secondary" style="margin:8px 16px 12px 16px" onclick="app.addBudgetLine()">Add line</button>
             </div>
 
             <!-- Shooting -->
             <div id="shootingTab" style="display:none">
-              <div style="flex:1;overflow-y:auto;padding:20px">
+              <div style="flex:1;overflow-y:auto;padding:14px 16px">
                 <table class="data-table">
                   <thead>
                     <tr><th>Date</th><th>Location</th><th>Scenes</th><th>Notes</th><th></th></tr>
@@ -393,7 +350,7 @@ input[type="file"]{display:none}
                   <tbody id="shootingList"></tbody>
                 </table>
               </div>
-              <button class="btn secondary" style="margin:10px 20px 16px 20px" onclick="app.addShootingDay()">+ Add day</button>
+              <button class="btn secondary" style="margin:8px 16px 12px 16px" onclick="app.addShootingDay()">Add day</button>
             </div>
 
             <!-- Chat -->
@@ -402,9 +359,9 @@ input[type="file"]{display:none}
                 <div class="chat-header-row">
                   <div>
                     <div class="chat-title" id="chatTitle">Chat</div>
-                    <div class="chat-sub" id="chatSubtitle">Discuss this project or use the public room.</div>
+                    <div class="chat-sub" id="chatSubtitle">Project notes or shared room.</div>
                   </div>
-                  <div style="font-size:10px;color:#888">Attachments are stored with messages</div>
+                  <div style="font-size:10px;color:#777">Files stay with messages.</div>
                 </div>
 
                 <div class="chat-scope-toggle">
@@ -412,14 +369,14 @@ input[type="file"]{display:none}
                   <button id="publicChatBtn" onclick="app.setChatScope('public')">Public room</button>
                 </div>
                 <div class="chat-help">
-                  <b>Project chat</b> stays with this project and disappears if the project is deleted. <b>Public room</b> is shared across everything.
+                  Project chat is tied to this project and removed if the project is deleted. Public room is shared by everything.
                 </div>
 
                 <div class="messages-area" id="messagesArea"></div>
 
                 <div class="input-area" id="inputArea">
-                  <input type="text" id="messageInput" class="message-input" placeholder="Type a message and press Send">
-                  <button class="attach-btn" onclick="document.getElementById('fileInput').click()">📎 Attach</button>
+                  <input type="text" id="messageInput" class="message-input" placeholder="Write a message">
+                  <button class="attach-btn" onclick="document.getElementById('fileInput').click()">Attach</button>
                   <button class="send-btn" onclick="app.sendMessage()">Send</button>
                   <input type="file" id="fileInput" onchange="app.handleFileSelect()">
                 </div>
@@ -428,18 +385,15 @@ input[type="file"]{display:none}
           </div>
         </div>
 
-        <!-- Settings / Help view -->
+        <!-- Settings / Help -->
         <div id="settingsView">
           <div class="settings-card">
-            <h3>How to use MaxFilm</h3>
-            <p>1. Create a project from the sidebar or the header.<br>
-               2. Open the project from the sidebar list.<br>
-               3. Use the <b>Scripts</b> tab as your screenplay page, <b>Storyboards</b> to collect frames, <b>Budget</b> and <b>Shooting</b> to keep track of money and days.<br>
-               4. Use <b>Project chat</b> for notes tied to that project and <b>Public room</b> for general talk.</p>
+            <h3>Focus</h3>
+            <p>MaxFilm is for producing and production management: tracking projects, finished scripts, budgets, shooting days and decisions. Do the actual writing in your preferred screenwriting software, then upload the files here.</p>
           </div>
           <div class="settings-card">
-            <h3>Password</h3>
-            <p>The default password is <b>MAX</b>. To change it, open the server file and edit the check inside <code>login()</code> in the inline script.</p>
+            <h3>Typical workflow</h3>
+            <p>Create a project, upload the script and reference frames, keep a simple budget and list of days, and use chat for notes and decisions.</p>
           </div>
         </div>
       </div>
@@ -447,15 +401,15 @@ input[type="file"]{display:none}
   </div>
 </div>
 
-<!-- Simple "modal" for new project (inline) -->
+<!-- New project modal -->
 <div id="newProjectModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.35);z-index:50">
-  <div style="background:#fff;border-radius:14px;padding:20px 20px 16px 20px;border:1px solid #d0d4dd;min-width:280px;max-width:360px">
-    <div style="font-size:14px;font-weight:600;margin-bottom:8px">New project</div>
-    <div style="font-size:11px;color:#777;margin-bottom:12px">Give your film or episode a name.</div>
-    <input id="newProjectNameInput" type="text" placeholder="Project title" style="width:100%;padding:10px 9px;border-radius:8px;border:1px solid #d0d4dd;font-size:12px;margin-bottom:12px">
+  <div style="background:#fff;border-radius:3px;padding:16px 16px 12px 16px;border:1px solid #ddd;min-width:260px;max-width:340px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">New project</div>
+    <div style="font-size:11px;color:#777;margin-bottom:10px">Name your production.</div>
+    <input id="newProjectNameInput" type="text" placeholder="Title" style="width:100%;padding:8px 8px;border-radius:3px;border:1px solid #ddd;font-size:12px;margin-bottom:10px">
     <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button onclick="app.closeNewProjectModal()" style="padding:7px 11px;border-radius:999px;border:1px solid #e0e0e0;background:#fafafa;font-size:11px;cursor:pointer">Cancel</button>
-      <button onclick="app.createProjectFromModal()" style="padding:7px 13px;border-radius:999px;border:1px solid #000;background:#000;color:#fff;font-size:11px;font-weight:600;cursor:pointer">Create</button>
+      <button onclick="app.closeNewProjectModal()" style="padding:6px 9px;border-radius:3px;border:1px solid #ddd;background:#f6f6f6;font-size:11px;cursor:pointer">Cancel</button>
+      <button onclick="app.createProjectFromModal()" style="padding:6px 11px;border-radius:3px;border:1px solid #111;background:#111;color:#fff;font-size:11px;font-weight:500;cursor:pointer">Create</button>
     </div>
   </div>
 </div>
@@ -472,9 +426,7 @@ var app = {
   currentChatScope: "project",
   projectFilter: "",
 
-  init: function() {
-    // no auto-login
-  },
+  init: function() {},
 
   login: function() {
     var value = document.getElementById("password").value;
@@ -521,7 +473,7 @@ var app = {
       if (this.currentProject) {
         document.getElementById("headerBreadcrumb").textContent = "Editing project • " + this.currentProject.name;
       } else {
-        document.getElementById("headerBreadcrumb").textContent = "Overview of all projects";
+        document.getElementById("headerBreadcrumb").textContent = "All projects";
       }
     } else if (view === "settings") {
       dashboard.style.display = "none";
@@ -529,7 +481,7 @@ var app = {
       settings.style.display = "block";
       document.getElementById("navSettings").classList.add("active");
       document.getElementById("headerTitle").textContent = "Help";
-      document.getElementById("headerBreadcrumb").textContent = "Quick guide to using MaxFilm";
+      document.getElementById("headerBreadcrumb").textContent = "How to use MaxFilm";
     }
   },
 
@@ -540,15 +492,8 @@ var app = {
     }, 5000);
   },
 
-  onScriptChange: function() {
-    if (!this.currentProject) return;
-    this.currentProject.scripts = document.getElementById("scriptText").value;
-    this.updateScenesList();
-  },
-
   autoSaveProject: async function() {
     if (!this.currentProject) return;
-    this.currentProject.scripts = document.getElementById("scriptText").value;
     this.currentProject.updatedAt = new Date().toLocaleDateString();
     await fetch("/api/projects", {
       method: "POST",
@@ -559,19 +504,19 @@ var app = {
   },
 
   loadProjects: async function() {
-    const res = await fetch("/api/projects");
+    var res = await fetch("/api/projects");
     this.projects = await res.json();
     this.renderDashboard();
   },
 
   loadPublicMessages: async function() {
-    const res = await fetch("/api/messages?scope=public");
+    var res = await fetch("/api/messages?scope=public");
     this.publicMessages = await res.json();
   },
 
   loadProjectMessages: async function() {
     if (!this.currentProject) return;
-    const res = await fetch("/api/messages?scope=project&projectId=" + this.currentProject.id);
+    var res = await fetch("/api/messages?scope=project&projectId=" + this.currentProject.id);
     this.projectMessages = await res.json();
   },
 
@@ -596,7 +541,7 @@ var app = {
           '</div>' +
         '</div>';
     }).join("");
-    document.getElementById("allProjects").innerHTML = html || '<div class="empty-text">No projects yet. Create one from the left or top.</div>';
+    document.getElementById("allProjects").innerHTML = html || '<div class="empty-text">No projects yet. Create one to start.</div>';
     this.renderSidebar();
   },
 
@@ -611,7 +556,7 @@ var app = {
           '<span>' + (p.updatedAt || "Not saved yet") + '</span>' +
         '</button>';
     }).join("");
-    container.innerHTML = html || '<div class="empty-text" style="padding:4px 4px 0 4px;">No projects yet</div>';
+    container.innerHTML = html || '<div class="empty-text" style="padding:4px 4px 0 4px;">No projects</div>';
   },
 
   getFilteredProjects: function() {
@@ -651,7 +596,7 @@ var app = {
     this.currentProject = {
       id: Date.now(),
       name: name,
-      scripts: "",
+      scripts: [],
       storyboards: [],
       budget: { currency: "NOK", items: [] },
       shooting: [],
@@ -674,6 +619,7 @@ var app = {
 
   openProject: function(id) {
     this.currentProject = this.projects.find(function(p) { return p.id == id; });
+    if (!this.currentProject.scripts) this.currentProject.scripts = [];
     this.showEditor();
     this.renderEditor();
     this.loadProjectMessages();
@@ -687,7 +633,7 @@ var app = {
       this.currentProject = null;
       document.getElementById("editorView").style.display = "none";
       document.getElementById("headerTitle").textContent = "Dashboard";
-      document.getElementById("headerBreadcrumb").textContent = "Overview of all projects";
+      document.getElementById("headerBreadcrumb").textContent = "All projects";
     }
     this.renderDashboard();
   },
@@ -705,65 +651,83 @@ var app = {
     for (var j = 0; j < tabButtons.length; j++) {
       tabButtons[j].classList.remove("active");
     }
-    document.getElementById(tab + "Tab").style.display = (tab === "scripts") ? "flex" : "block";
+    document.getElementById(tab + "Tab").style.display = "block";
     event.target.classList.add("active");
   },
 
-  setChatScope: function(scope) {
-    this.currentChatScope = scope;
-    var projectBtn = document.getElementById("projectChatBtn");
-    var publicBtn = document.getElementById("publicChatBtn");
-    if (projectBtn && publicBtn) {
-      projectBtn.classList.remove("active");
-      publicBtn.classList.remove("active");
-      if (scope === "project") projectBtn.classList.add("active");
-      else publicBtn.classList.add("active");
-    }
-    if (scope === "project") {
-      this.loadProjectMessages().then(this.renderChat.bind(this));
-    } else {
-      this.loadPublicMessages().then(this.renderChat.bind(this));
-    }
+  /* Scripts upload */
+  handleScriptUpload: function() {
+    if (!this.currentProject) return;
+    var input = document.getElementById("scriptFileInput");
+    var file = input.files[0];
+    if (!file) return;
+    var self = this;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      if (!self.currentProject.scripts) self.currentProject.scripts = [];
+      self.currentProject.scripts.push({
+        id: Date.now(),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        data: e.target.result,
+        uploadedAt: new Date().toLocaleString()
+      });
+      self.renderScripts();
+      input.value = "";
+    };
+    reader.readAsDataURL(file);
   },
 
-  insertScene: function(type) {
-    var textarea = document.getElementById("scriptText");
-    var toInsert = "";
-    if (type === "EXT") toInsert = "\\nEXT. LOCATION - DAY\\n\\n";
-    else if (type === "INT") toInsert = "\\nINT. LOCATION - DAY\\n\\n";
-    else if (type === "ACTION") toInsert = "\\nACTION\\n";
-    else if (type === "CHARACTER") toInsert = "\\nCHARACTER\\n";
-    else if (type === "DIALOGUE") toInsert = "\\nDIALOGUE\\n";
-    else toInsert = "\\n(parenthetical)\\n";
-
-    textarea.value += toInsert;
-    if (this.currentProject) this.currentProject.scripts = textarea.value;
-    this.updateScenesList();
+  renderScripts: function() {
+    var list = document.getElementById("scriptsList");
+    var scripts = this.currentProject && this.currentProject.scripts ? this.currentProject.scripts : [];
+    if (!scripts.length) {
+      list.innerHTML = '<div class="empty-text" style="padding:8px 0;">No scripts uploaded.</div>';
+      return;
+    }
+    var html = scripts.map(function(s) {
+      return '' +
+        '<div class="script-row">' +
+          '<div>' +
+            '<div class="script-name">' + s.name + '</div>' +
+            '<div class="script-meta">' + Math.round(s.size / 1024) + ' KB · ' + (s.uploadedAt || '') + '</div>' +
+          '</div>' +
+          '<div class="script-actions">' +
+            '<button class="btn secondary" style="padding:3px 6px;font-size:10px" onclick="app.downloadScript(' + s.id + ')">Download</button>' +
+            '<button class="btn secondary" style="padding:3px 6px;font-size:10px" onclick="app.deleteScript(' + s.id + ')">Remove</button>' +
+          '</div>' +
+        '</div>';
+    }).join("");
+    list.innerHTML = html;
   },
 
+  downloadScript: function(id) {
+    if (!this.currentProject || !this.currentProject.scripts) return;
+    var s = this.currentProject.scripts.find(function(x) { return x.id === id; });
+    if (!s) return;
+    var a = document.createElement("a");
+    a.href = s.data;
+    a.download = s.name;
+    a.click();
+  },
+
+  deleteScript: function(id) {
+    if (!this.currentProject || !this.currentProject.scripts) return;
+    this.currentProject.scripts = this.currentProject.scripts.filter(function(x) { return x.id !== id; });
+    this.renderScripts();
+  },
+
+  /* Other editor sections */
   renderEditor: function() {
-    document.getElementById("scriptProjectTitle").textContent = this.currentProject.name;
-    document.getElementById("scriptText").value = this.currentProject.scripts || "";
     document.getElementById("currencySelect").value = this.currentProject.budget.currency || "NOK";
     this.updateCurrencySymbol();
-    this.updateScenesList();
+    this.renderScripts();
     this.renderStoryboards();
     this.renderBudget();
     this.renderShooting();
     this.currentChatScope = "project";
     this.setChatScope("project");
-  },
-
-  updateScenesList: function() {
-    var text = this.currentProject.scripts || "";
-    var lines = text.split("\\n");
-    var scenes = lines.filter(function(line) {
-      return line.indexOf("INT.") === 0 || line.indexOf("EXT.") === 0;
-    });
-    var html = scenes.map(function(s, i) {
-      return '<div class="scene-item">' + (i + 1) + '. ' + s.slice(0, 32) + '...</div>';
-    }).join("");
-    document.getElementById("scenesList").innerHTML = html || '<div class="empty-text" style="padding:8px 10px;">No scene headings yet</div>';
   },
 
   addStoryboard: function() {
@@ -785,7 +749,7 @@ var app = {
           '</div>' +
         '</div>';
     }).join("");
-    document.getElementById("storyboardsList").innerHTML = html || '<div class="empty-text">No frames yet. Add one to start visualizing.</div>';
+    document.getElementById("storyboardsList").innerHTML = html || '<div class="empty-text">No frames. Add key visual references.</div>';
   },
 
   uploadStoryboard: function(id, input) {
@@ -889,6 +853,7 @@ var app = {
     this.renderShooting();
   },
 
+  /* Chat */
   handleFileSelect: function() {
     var file = document.getElementById("fileInput").files[0];
     if (!file) return;
@@ -908,7 +873,7 @@ var app = {
     if (existing) existing.remove();
     var div = document.createElement("div");
     div.className = "file-preview";
-    div.innerHTML = "📎 " + this.selectedFile.name + ' <button onclick="app.removeFile()" type="button">✕</button>';
+    div.innerHTML = "File: " + this.selectedFile.name + ' <button onclick="app.removeFile()" type="button">x</button>';
     inputArea.insertBefore(div, inputArea.querySelector(".message-input").nextSibling);
   },
 
@@ -956,6 +921,23 @@ var app = {
     a.click();
   },
 
+  setChatScope: function(scope) {
+    this.currentChatScope = scope;
+    var projectBtn = document.getElementById("projectChatBtn");
+    var publicBtn = document.getElementById("publicChatBtn");
+    if (projectBtn && publicBtn) {
+      projectBtn.classList.remove("active");
+      publicBtn.classList.remove("active");
+      if (scope === "project") projectBtn.classList.add("active");
+      else publicBtn.classList.add("active");
+    }
+    if (scope === "project") {
+      this.loadProjectMessages().then(this.renderChat.bind(this));
+    } else {
+      this.loadPublicMessages().then(this.renderChat.bind(this));
+    }
+  },
+
   renderChat: function() {
     var messages;
     var title;
@@ -964,12 +946,12 @@ var app = {
       title = "Public room";
     } else {
       messages = this.projectMessages;
-      title = this.currentProject ? "Chat • " + this.currentProject.name : "Project chat";
+      title = this.currentProject ? "Project chat · " + this.currentProject.name : "Project chat";
     }
     var html = messages.map(function(m) {
       var fileHtml = "";
       if (m.file) {
-        fileHtml = '<br><a class="message-file" onclick="app.downloadFile(' + "'" + m.file.data + "'" + ',' + "'" + m.file.name + "'" + ')">📄 ' + m.file.name + '</a>';
+        fileHtml = '<br><a class="message-file" onclick="app.downloadFile(' + "'" + m.file.data + "'" + ',' + "'" + m.file.name + "'" + ')">File: ' + m.file.name + '</a>';
       }
       return '' +
         '<div class="message-item">' +
@@ -979,7 +961,7 @@ var app = {
           '<div class="message-meta">' + m.timestamp + '</div>' +
         '</div>';
     }).join("");
-    document.getElementById("messagesArea").innerHTML = html || '<div class="empty-text">' + title + ' empty.</div>';
+    document.getElementById("messagesArea").innerHTML = html || '<div class="empty-text">' + title + ' is empty.</div>';
     var area = document.getElementById("messagesArea");
     area.scrollTop = area.scrollHeight;
     document.getElementById("chatTitle").textContent = title;
