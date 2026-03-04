@@ -11,22 +11,22 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 const DB_FILE = 'data.json';
 
 function loadDB() {
-    if (!fs.existsSync(DB_FILE)) {
-        return { projects: [], messages: [] };
-    }
-    try {
-        return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-    } catch {
-        return { projects: [], messages: [] };
-    }
+  if (!fs.existsSync(DB_FILE)) {
+    return { projects: [], messages: [] };
+  }
+  try {
+    return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+  } catch {
+    return { projects: [], messages: [] };
+  }
 }
 
 function saveDB(data) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
 }
 
 app.get('/', (req, res) => {
-    res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a}
@@ -461,7 +461,7 @@ input[type="file"]{display:none}
 </div>
 
 <script>
-const app = {
+var app = {
   authenticated: false,
   currentProject: null,
   projects: [],
@@ -472,12 +472,12 @@ const app = {
   currentChatScope: "project",
   projectFilter: "",
 
-  async init() {
-    // No auto-login: password required each visit.
+  init: function() {
+    // no auto-login
   },
 
-  login() {
-    const value = document.getElementById("password").value;
+  login: function() {
+    var value = document.getElementById("password").value;
     if (value === "MAX") {
       this.authenticated = true;
       this.showApp();
@@ -489,7 +489,7 @@ const app = {
     }
   },
 
-  logout() {
+  logout: function() {
     this.authenticated = false;
     this.currentProject = null;
     this.projects = [];
@@ -499,15 +499,15 @@ const app = {
     location.reload();
   },
 
-  showApp() {
+  showApp: function() {
     document.getElementById("authScreen").classList.remove("active");
     document.getElementById("appScreen").classList.add("active");
   },
 
-  showMainView(view) {
-    const dashboard = document.getElementById("dashboardView");
-    const editor = document.getElementById("editorView");
-    const settings = document.getElementById("settingsView");
+  showMainView: function(view) {
+    var dashboard = document.getElementById("dashboardView");
+    var editor = document.getElementById("editorView");
+    var settings = document.getElementById("settingsView");
 
     document.getElementById("navDashboard").classList.remove("active");
     document.getElementById("navSettings").classList.remove("active");
@@ -533,19 +533,20 @@ const app = {
     }
   },
 
-  startAutoSave() {
-    this.autoSaveInterval = setInterval(() => {
-      if (this.currentProject) this.autoSaveProject();
+  startAutoSave: function() {
+    var self = this;
+    this.autoSaveInterval = setInterval(function() {
+      if (self.currentProject) self.autoSaveProject();
     }, 5000);
   },
 
-  onScriptChange() {
+  onScriptChange: function() {
     if (!this.currentProject) return;
     this.currentProject.scripts = document.getElementById("scriptText").value;
     this.updateScenesList();
   },
 
-  async autoSaveProject() {
+  autoSaveProject: async function() {
     if (!this.currentProject) return;
     this.currentProject.scripts = document.getElementById("scriptText").value;
     this.currentProject.updatedAt = new Date().toLocaleDateString();
@@ -557,92 +558,99 @@ const app = {
     document.getElementById("saveIndicator").textContent = "Auto-saved";
   },
 
-  async loadProjects() {
+  loadProjects: async function() {
     const res = await fetch("/api/projects");
     this.projects = await res.json();
     this.renderDashboard();
   },
 
-  async loadPublicMessages() {
+  loadPublicMessages: async function() {
     const res = await fetch("/api/messages?scope=public");
     this.publicMessages = await res.json();
   },
 
-  async loadProjectMessages() {
+  loadProjectMessages: async function() {
     if (!this.currentProject) return;
     const res = await fetch("/api/messages?scope=project&projectId=" + this.currentProject.id);
     this.projectMessages = await res.json();
   },
 
-  renderDashboard() {
-    const countLabel = document.getElementById("projectsCountLabel");
+  renderDashboard: function() {
+    var countLabel = document.getElementById("projectsCountLabel");
     countLabel.textContent = this.projects.length + " total";
 
-    const filtered = this.getFilteredProjects();
-    const html = filtered.map(p => `
-      <div class="project-card" onclick="app.openProject('${p.id}')">
-        <div class="project-card-header">
-          <div>
-            <h4>${p.name}</h4>
-            <div class="project-meta">Updated ${p.updatedAt || "-"}</div>
-          </div>
-          <span class="project-chip">${p.shooting && p.shooting.length ? "In progress" : "Planning"}</span>
-        </div>
-        <div class="project-card-actions">
-          <button onclick="event.stopPropagation();app.openProject('${p.id}')">Open</button>
-          <button onclick="event.stopPropagation();app.deleteProject('${p.id}')">Delete</button>
-        </div>
-      </div>
-    `).join("");
+    var filtered = this.getFilteredProjects();
+    var html = filtered.map(function(p) {
+      return '' +
+        '<div class="project-card" onclick="app.openProject(' + "'" + p.id + "'" + ')">' +
+          '<div class="project-card-header">' +
+            '<div>' +
+              '<h4>' + p.name + '</h4>' +
+              '<div class="project-meta">Updated ' + (p.updatedAt || "-") + '</div>' +
+            '</div>' +
+            '<span class="project-chip">' + ((p.shooting && p.shooting.length) ? "In progress" : "Planning") + '</span>' +
+          '</div>' +
+          '<div class="project-card-actions">' +
+            '<button onclick="event.stopPropagation();app.openProject(' + "'" + p.id + "'" + ')">Open</button>' +
+            '<button onclick="event.stopPropagation();app.deleteProject(' + "'" + p.id + "'" + ')">Delete</button>' +
+          '</div>' +
+        '</div>';
+    }).join("");
     document.getElementById("allProjects").innerHTML = html || '<div class="empty-text">No projects yet. Create one from the left or top.</div>';
     this.renderSidebar();
   },
 
-  renderSidebar() {
-    const container = document.getElementById("projectsList");
-    const filtered = this.getFilteredProjects();
-    const html = filtered.map(p => `
-      <button class="sidebar-btn ${this.currentProject && this.currentProject.id == p.id ? "active" : ""}" onclick="app.openProject('${p.id}')">
-        <div>${p.name}</div>
-        <span>${p.updatedAt || "Not saved yet"}</span>
-      </button>
-    `).join("");
+  renderSidebar: function() {
+    var container = document.getElementById("projectsList");
+    var filtered = this.getFilteredProjects();
+    var html = filtered.map(function(p) {
+      var isActive = (app.currentProject && app.currentProject.id == p.id) ? " active" : "";
+      return '' +
+        '<button class="sidebar-btn' + isActive + '" onclick="app.openProject(' + "'" + p.id + "'" + ')">' +
+          '<div>' + p.name + '</div>' +
+          '<span>' + (p.updatedAt || "Not saved yet") + '</span>' +
+        '</button>';
+    }).join("");
     container.innerHTML = html || '<div class="empty-text" style="padding:4px 4px 0 4px;">No projects yet</div>';
   },
 
-  getFilteredProjects() {
+  getFilteredProjects: function() {
     if (!this.projectFilter) return this.projects;
-    const f = this.projectFilter.toLowerCase();
-    return this.projects.filter(p => (p.name || "").toLowerCase().includes(f));
+    var f = this.projectFilter.toLowerCase();
+    return this.projects.filter(function(p) {
+      return (p.name || "").toLowerCase().indexOf(f) !== -1;
+    });
   },
 
-  filterProjects() {
-    const value = document.getElementById("projectSearchInput").value || "";
+  filterProjects: function() {
+    var value = document.getElementById("projectSearchInput").value || "";
     this.projectFilter = value;
     this.renderDashboard();
   },
 
-  openNewProjectModal() {
+  openNewProjectModal: function() {
     document.getElementById("newProjectNameInput").value = "";
     document.getElementById("newProjectModal").style.display = "flex";
-    setTimeout(() => document.getElementById("newProjectNameInput").focus(), 20);
+    setTimeout(function() {
+      document.getElementById("newProjectNameInput").focus();
+    }, 20);
   },
 
-  closeNewProjectModal() {
+  closeNewProjectModal: function() {
     document.getElementById("newProjectModal").style.display = "none";
   },
 
-  createProjectFromModal() {
-    const name = document.getElementById("newProjectNameInput").value.trim();
+  createProjectFromModal: function() {
+    var name = document.getElementById("newProjectNameInput").value.trim();
     if (!name) return;
     this.closeNewProjectModal();
     this.createProject(name);
   },
 
-  createProject(name) {
+  createProject: function(name) {
     this.currentProject = {
       id: Date.now(),
-      name,
+      name: name,
       scripts: "",
       storyboards: [],
       budget: { currency: "NOK", items: [] },
@@ -654,7 +662,7 @@ const app = {
     this.loadProjectMessages();
   },
 
-  showEditor() {
+  showEditor: function() {
     document.getElementById("dashboardView").style.display = "flex";
     document.getElementById("editorView").style.display = "flex";
     document.getElementById("settingsView").style.display = "none";
@@ -664,17 +672,17 @@ const app = {
     document.getElementById("headerBreadcrumb").textContent = "Editing project • " + this.currentProject.name;
   },
 
-  openProject(id) {
-    this.currentProject = this.projects.find(p => p.id == id);
+  openProject: function(id) {
+    this.currentProject = this.projects.find(function(p) { return p.id == id; });
     this.showEditor();
     this.renderEditor();
     this.loadProjectMessages();
   },
 
-  async deleteProject(id) {
+  deleteProject: async function(id) {
     if (!confirm("Delete this project and its project chat?")) return;
-    await fetch(\`/api/projects/\${id}\`, { method: "DELETE" });
-    this.projects = this.projects.filter(p => p.id != id);
+    await fetch("/api/projects/" + id, { method: "DELETE" });
+    this.projects = this.projects.filter(function(p) { return p.id != id; });
     if (this.currentProject && this.currentProject.id == id) {
       this.currentProject = null;
       document.getElementById("editorView").style.display = "none";
@@ -684,21 +692,27 @@ const app = {
     this.renderDashboard();
   },
 
-  switchTab(tab) {
+  switchTab: function(tab) {
     if (tab === "chat") {
       this.setChatScope("project");
       this.renderChat();
     }
-    document.querySelectorAll('[id$="Tab"]').forEach(el => el.style.display = "none");
-    document.querySelectorAll(".tab").forEach(el => el.classList.remove("active"));
-    document.getElementById(tab + "Tab").style.display = tab === "scripts" ? "flex" : "block";
+    var tabs = document.querySelectorAll('[id$="Tab"]');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].style.display = "none";
+    }
+    var tabButtons = document.querySelectorAll(".tab");
+    for (var j = 0; j < tabButtons.length; j++) {
+      tabButtons[j].classList.remove("active");
+    }
+    document.getElementById(tab + "Tab").style.display = (tab === "scripts") ? "flex" : "block";
     event.target.classList.add("active");
   },
 
-  setChatScope(scope) {
+  setChatScope: function(scope) {
     this.currentChatScope = scope;
-    const projectBtn = document.getElementById("projectChatBtn");
-    const publicBtn = document.getElementById("publicChatBtn");
+    var projectBtn = document.getElementById("projectChatBtn");
+    var publicBtn = document.getElementById("publicChatBtn");
     if (projectBtn && publicBtn) {
       projectBtn.classList.remove("active");
       publicBtn.classList.remove("active");
@@ -706,15 +720,15 @@ const app = {
       else publicBtn.classList.add("active");
     }
     if (scope === "project") {
-      this.loadProjectMessages().then(() => this.renderChat());
+      this.loadProjectMessages().then(this.renderChat.bind(this));
     } else {
-      this.loadPublicMessages().then(() => this.renderChat());
+      this.loadPublicMessages().then(this.renderChat.bind(this));
     }
   },
 
-  insertScene(type) {
-    const textarea = document.getElementById("scriptText");
-    let toInsert = "";
+  insertScene: function(type) {
+    var textarea = document.getElementById("scriptText");
+    var toInsert = "";
     if (type === "EXT") toInsert = "\\nEXT. LOCATION - DAY\\n\\n";
     else if (type === "INT") toInsert = "\\nINT. LOCATION - DAY\\n\\n";
     else if (type === "ACTION") toInsert = "\\nACTION\\n";
@@ -727,7 +741,7 @@ const app = {
     this.updateScenesList();
   },
 
-  renderEditor() {
+  renderEditor: function() {
     document.getElementById("scriptProjectTitle").textContent = this.currentProject.name;
     document.getElementById("scriptText").value = this.currentProject.scripts || "";
     document.getElementById("currencySelect").value = this.currentProject.budget.currency || "NOK";
@@ -740,173 +754,187 @@ const app = {
     this.setChatScope("project");
   },
 
-  updateScenesList() {
-    const text = this.currentProject.scripts || "";
-    const scenes = text.split("\\n").filter(line => line.startsWith("INT.") || line.startsWith("EXT."));
-    document.getElementById("scenesList").innerHTML = scenes.map((s, i) => `
-      <div class="scene-item">${i + 1}. ${s.slice(0, 32)}...</div>
-    `).join("") || '<div class="empty-text" style="padding:8px 10px;">No scene headings yet</div>';
+  updateScenesList: function() {
+    var text = this.currentProject.scripts || "";
+    var lines = text.split("\\n");
+    var scenes = lines.filter(function(line) {
+      return line.indexOf("INT.") === 0 || line.indexOf("EXT.") === 0;
+    });
+    var html = scenes.map(function(s, i) {
+      return '<div class="scene-item">' + (i + 1) + '. ' + s.slice(0, 32) + '...</div>';
+    }).join("");
+    document.getElementById("scenesList").innerHTML = html || '<div class="empty-text" style="padding:8px 10px;">No scene headings yet</div>';
   },
 
-  addStoryboard() {
+  addStoryboard: function() {
     this.currentProject.storyboards.push({ id: Date.now(), image: null, notes: "" });
     this.renderStoryboards();
   },
 
-  renderStoryboards() {
-    const items = this.currentProject.storyboards || [];
-    const html = items.map(sb => `
-      <div class="storyboard-card">
-        <label class="storyboard-image">
-          ${sb.image ? `<img src="${sb.image}">` : "Upload frame"}
-          <input type="file" accept="image/*" onchange="app.uploadStoryboard(${sb.id}, this)">
-        </label>
-        <div class="storyboard-notes">
-          <textarea placeholder="Notes" onchange="app.updateStoryNotes(${sb.id}, this.value)">${sb.notes || ""}</textarea>
-        </div>
-      </div>
-    `).join("");
+  renderStoryboards: function() {
+    var items = this.currentProject.storyboards || [];
+    var html = items.map(function(sb) {
+      return '' +
+        '<div class="storyboard-card">' +
+          '<label class="storyboard-image">' +
+            (sb.image ? '<img src="' + sb.image + '">' : 'Upload frame') +
+            '<input type="file" accept="image/*" onchange="app.uploadStoryboard(' + sb.id + ', this)">' +
+          '</label>' +
+          '<div class="storyboard-notes">' +
+            '<textarea placeholder="Notes" onchange="app.updateStoryNotes(' + sb.id + ', this.value)">' + (sb.notes || "") + '</textarea>' +
+          '</div>' +
+        '</div>';
+    }).join("");
     document.getElementById("storyboardsList").innerHTML = html || '<div class="empty-text">No frames yet. Add one to start visualizing.</div>';
   },
 
-  uploadStoryboard(id, input) {
-    const file = input.files[0];
+  uploadStoryboard: function(id, input) {
+    var file = input.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      const item = this.currentProject.storyboards.find(s => s.id === id);
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var item = app.currentProject.storyboards.find(function(s) { return s.id === id; });
       if (item) {
         item.image = e.target.result;
-        this.renderStoryboards();
+        app.renderStoryboards();
       }
     };
     reader.readAsDataURL(file);
   },
 
-  updateStoryNotes(id, value) {
-    const item = this.currentProject.storyboards.find(s => s.id === id);
+  updateStoryNotes: function(id, value) {
+    var item = this.currentProject.storyboards.find(function(s) { return s.id === id; });
     if (item) item.notes = value;
   },
 
-  changeCurrency() {
-    const value = document.getElementById("currencySelect").value;
+  changeCurrency: function() {
+    var value = document.getElementById("currencySelect").value;
     this.currentProject.budget.currency = value;
     this.updateCurrencySymbol();
     this.renderBudget();
   },
 
-  updateCurrencySymbol() {
-    const value = document.getElementById("currencySelect").value;
-    const map = { NOK: "kr", USD: "$", EUR: "€", GBP: "£", SEK: "kr", DKK: "kr" };
+  updateCurrencySymbol: function() {
+    var value = document.getElementById("currencySelect").value;
+    var map = { NOK: "kr", USD: "$", EUR: "€", GBP: "£", SEK: "kr", DKK: "kr" };
     document.getElementById("currencySymbol").textContent = map[value] || "$";
   },
 
-  addBudgetLine() {
+  addBudgetLine: function() {
     this.currentProject.budget.items.push({ id: Date.now(), category: "", description: "", amount: 0 });
     this.renderBudget();
   },
 
-  renderBudget() {
-    const items = this.currentProject.budget.items || [];
-    const rows = items.map(item => `
-      <tr>
-        <td><input type="text" value="${item.category}" onchange="app.updateBudget(${item.id}, 'category', this.value)"></td>
-        <td><input type="text" value="${item.description}" onchange="app.updateBudget(${item.id}, 'description', this.value)"></td>
-        <td><input type="number" value="${item.amount}" onchange="app.updateBudget(${item.id}, 'amount', this.value)"></td>
-        <td><button class="delete-btn" onclick="app.deleteBudgetLine(${item.id})">Delete</button></td>
-      </tr>
-    `).join("");
+  renderBudget: function() {
+    var items = this.currentProject.budget.items || [];
+    var rows = items.map(function(item) {
+      return '' +
+        '<tr>' +
+          '<td><input type="text" value="' + item.category + '" onchange="app.updateBudget(' + item.id + ', ' + "'category'" + ', this.value)"></td>' +
+          '<td><input type="text" value="' + item.description + '" onchange="app.updateBudget(' + item.id + ', ' + "'description'" + ', this.value)"></td>' +
+          '<td><input type="number" value="' + item.amount + '" onchange="app.updateBudget(' + item.id + ', ' + "'amount'" + ', this.value)"></td>' +
+          '<td><button class="delete-btn" onclick="app.deleteBudgetLine(' + item.id + ')">Delete</button></td>' +
+        '</tr>';
+    }).join("");
     document.getElementById("budgetList").innerHTML = rows || '<tr><td colspan="4" class="empty-text">No budget lines yet.</td></tr>';
-    const total = items.reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
+    var total = items.reduce(function(sum, i) {
+      return sum + (parseFloat(i.amount) || 0);
+    }, 0);
     document.getElementById("budgetTotal").textContent = total.toFixed(2);
   },
 
-  updateBudget(id, field, value) {
-    const item = this.currentProject.budget.items.find(i => i.id === id);
+  updateBudget: function(id, field, value) {
+    var item = this.currentProject.budget.items.find(function(i) { return i.id === id; });
     if (!item) return;
-    item[field] = field === "amount" ? (parseFloat(value) || 0) : value;
+    if (field === "amount") {
+      item[field] = parseFloat(value) || 0;
+    } else {
+      item[field] = value;
+    }
     this.renderBudget();
   },
 
-  deleteBudgetLine(id) {
-    this.currentProject.budget.items = this.currentProject.budget.items.filter(i => i.id !== id);
+  deleteBudgetLine: function(id) {
+    this.currentProject.budget.items = this.currentProject.budget.items.filter(function(i) { return i.id !== id; });
     this.renderBudget();
   },
 
-  addShootingDay() {
+  addShootingDay: function() {
     this.currentProject.shooting.push({ id: Date.now(), date: "", location: "", scenes: "", notes: "" });
     this.renderShooting();
   },
 
-  renderShooting() {
-    const days = this.currentProject.shooting || [];
-    const rows = days.map(day => `
-      <tr>
-        <td><input type="text" value="${day.date}" onchange="app.updateShooting(${day.id}, 'date', this.value)"></td>
-        <td><input type="text" value="${day.location}" onchange="app.updateShooting(${day.id}, 'location', this.value)"></td>
-        <td><input type="text" value="${day.scenes}" onchange="app.updateShooting(${day.id}, 'scenes', this.value)"></td>
-        <td><input type="text" value="${day.notes}" onchange="app.updateShooting(${day.id}, 'notes', this.value)"></td>
-        <td><button class="delete-btn" onclick="app.deleteShootingDay(${day.id})">Delete</button></td>
-      </tr>
-    `).join("");
+  renderShooting: function() {
+    var days = this.currentProject.shooting || [];
+    var rows = days.map(function(day) {
+      return '' +
+        '<tr>' +
+          '<td><input type="text" value="' + day.date + '" onchange="app.updateShooting(' + day.id + ', ' + "'date'" + ', this.value)"></td>' +
+          '<td><input type="text" value="' + day.location + '" onchange="app.updateShooting(' + day.id + ', ' + "'location'" + ', this.value)"></td>' +
+          '<td><input type="text" value="' + day.scenes + '" onchange="app.updateShooting(' + day.id + ', ' + "'scenes'" + ', this.value)"></td>' +
+          '<td><input type="text" value="' + day.notes + '" onchange="app.updateShooting(' + day.id + ', ' + "'notes'" + ', this.value)"></td>' +
+          '<td><button class="delete-btn" onclick="app.deleteShootingDay(' + day.id + ')">Delete</button></td>' +
+        '</tr>';
+    }).join("");
     document.getElementById("shootingList").innerHTML = rows || '<tr><td colspan="5" class="empty-text">No shooting days yet.</td></tr>';
   },
 
-  updateShooting(id, field, value) {
-    const day = this.currentProject.shooting.find(d => d.id === id);
+  updateShooting: function(id, field, value) {
+    var day = this.currentProject.shooting.find(function(d) { return d.id === id; });
     if (day) day[field] = value;
   },
 
-  deleteShootingDay(id) {
-    this.currentProject.shooting = this.currentProject.shooting.filter(d => d.id !== id);
+  deleteShootingDay: function(id) {
+    this.currentProject.shooting = this.currentProject.shooting.filter(function(d) { return d.id !== id; });
     this.renderShooting();
   },
 
-  handleFileSelect() {
-    const file = document.getElementById("fileInput").files[0];
+  handleFileSelect: function() {
+    var file = document.getElementById("fileInput").files[0];
     if (!file) return;
     this.selectedFile = { name: file.name, type: file.type, size: file.size };
-    const reader = new FileReader();
-    reader.onload = e => {
-      this.selectedFile.data = e.target.result;
-      this.showFilePreview();
+    var reader = new FileReader();
+    var self = this;
+    reader.onload = function(e) {
+      self.selectedFile.data = e.target.result;
+      self.showFilePreview();
     };
     reader.readAsDataURL(file);
   },
 
-  showFilePreview() {
-    const inputArea = document.getElementById("inputArea");
-    const existing = inputArea.querySelector(".file-preview");
+  showFilePreview: function() {
+    var inputArea = document.getElementById("inputArea");
+    var existing = inputArea.querySelector(".file-preview");
     if (existing) existing.remove();
-    const div = document.createElement("div");
+    var div = document.createElement("div");
     div.className = "file-preview";
-    div.innerHTML = \`📎 \${this.selectedFile.name} <button onclick="app.removeFile()" type="button">✕</button>\`;
+    div.innerHTML = "📎 " + this.selectedFile.name + ' <button onclick="app.removeFile()" type="button">✕</button>';
     inputArea.insertBefore(div, inputArea.querySelector(".message-input").nextSibling);
   },
 
-  removeFile() {
+  removeFile: function() {
     this.selectedFile = null;
     document.getElementById("fileInput").value = "";
-    const existing = document.getElementById("inputArea").querySelector(".file-preview");
+    var existing = document.getElementById("inputArea").querySelector(".file-preview");
     if (existing) existing.remove();
   },
 
-  async sendMessage() {
-    const text = document.getElementById("messageInput").value;
+  sendMessage: async function() {
+    var text = document.getElementById("messageInput").value;
     if (!text && !this.selectedFile) return;
-    const scope = this.currentChatScope === "public" ? "public" : "project";
-    const projectId = scope === "project" && this.currentProject ? this.currentProject.id : null;
+    var scope = this.currentChatScope === "public" ? "public" : "project";
+    var projectId = (scope === "project" && this.currentProject) ? this.currentProject.id : null;
 
     await fetch("/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id: Date.now(),
-        text,
+        text: text,
         file: this.selectedFile,
         timestamp: new Date().toLocaleString(),
-        scope,
-        projectId
+        scope: scope,
+        projectId: projectId
       })
     });
 
@@ -921,15 +949,16 @@ const app = {
     this.renderChat();
   },
 
-  downloadFile(data, name) {
-    const a = document.createElement("a");
+  downloadFile: function(data, name) {
+    var a = document.createElement("a");
     a.href = data;
     a.download = name;
     a.click();
   },
 
-  renderChat() {
-    let messages, title;
+  renderChat: function() {
+    var messages;
+    var title;
     if (this.currentChatScope === "public") {
       messages = this.publicMessages;
       title = "Public room";
@@ -937,16 +966,21 @@ const app = {
       messages = this.projectMessages;
       title = this.currentProject ? "Chat • " + this.currentProject.name : "Project chat";
     }
-    const html = messages.map(m => `
-      <div class="message-item">
-        <div class="message-text">
-          ${m.text || ""}${m.file ? \`<br><a class="message-file" onclick="app.downloadFile('\${m.file.data}','\${m.file.name}')">📄 \${m.file.name}</a>\` : ""}
-        </div>
-        <div class="message-meta">${m.timestamp}</div>
-      </div>
-    `).join("");
-    document.getElementById("messagesArea").innerHTML = html || \`<div class="empty-text">\${title} empty.</div>\`;
-    const area = document.getElementById("messagesArea");
+    var html = messages.map(function(m) {
+      var fileHtml = "";
+      if (m.file) {
+        fileHtml = '<br><a class="message-file" onclick="app.downloadFile(' + "'" + m.file.data + "'" + ',' + "'" + m.file.name + "'" + ')">📄 ' + m.file.name + '</a>';
+      }
+      return '' +
+        '<div class="message-item">' +
+          '<div class="message-text">' +
+            (m.text || "") + fileHtml +
+          '</div>' +
+          '<div class="message-meta">' + m.timestamp + '</div>' +
+        '</div>';
+    }).join("");
+    document.getElementById("messagesArea").innerHTML = html || '<div class="empty-text">' + title + ' empty.</div>';
+    var area = document.getElementById("messagesArea");
     area.scrollTop = area.scrollHeight;
     document.getElementById("chatTitle").textContent = title;
   }
@@ -1034,5 +1068,5 @@ app.post('/api/messages', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(\`MaxFilm running on port \${PORT}\`);
+  console.log(`MaxFilm running on port ${PORT}`);
 });
