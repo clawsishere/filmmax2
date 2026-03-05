@@ -26,7 +26,7 @@ function saveDB(data) {
 }
 
 app.get('/', (req, res) => {
-  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#050608;color:#f5f5f5;overflow:hidden}
@@ -107,7 +107,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab-content{flex:1;overflow-y:auto;padding:16px 18px;display:none}
 .tab-content.active{display:block}
 
-/* Budget section */
+/* Budget */
 .budget-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
 .budget-stat{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px}
 .budget-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:6px}
@@ -123,28 +123,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .delete-btn{background:#101218;border-radius:2px;border:1px solid #262833;color:#a0a1af;padding:4px 6px;font-size:9px;cursor:pointer;text-transform:uppercase}
 .delete-btn:hover{border-color:#3b3d49}
 
-/* Shooting section */
+/* Shooting */
 .shooting-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
 .shooting-stat{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:10px}
 .shooting-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:4px}
 .shooting-stat-value{font-size:18px;font-weight:700;color:#d4c6b3}
-.shooting-table-wrap{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow-x:auto}
 
-/* Scripts section */
-.scripts-top{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px}
-.scripts-upload{background:#0b0d12;border-radius:3px;border:2px dashed #262833;padding:16px;text-align:center;cursor:pointer}
+/* Scripts */
+.scripts-upload{background:#0b0d12;border-radius:3px;border:2px dashed #262833;padding:16px;text-align:center;cursor:pointer;margin-bottom:12px}
 .scripts-upload:hover{border-color:#3b3d49}
-.scripts-upload-icon{font-size:24px;margin-bottom:8px}
-.scripts-upload-text{font-size:11px;color:#8a8b93}
-.scripts-list-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;display:flex;flex-direction:column;gap:6px}
+.scripts-list-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .script-item{padding:6px;background:#0e1014;border-radius:2px;border:1px solid #1d1f28;font-size:10px;cursor:pointer}
 .script-item:hover{border-color:#3b3d49}
-.script-item.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
 .scripts-viewer{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;flex:1;display:flex;flex-direction:column}
-.scripts-viewer-title{font-size:10px;color:#6b6c76;margin-bottom:8px}
 #scriptIframe{width:100%;flex:1;border:none;border-radius:2px;background:#050608}
 
-/* Visuals section */
+/* Visuals */
 .visuals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .visual-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow:hidden;display:flex;flex-direction:column}
 .visual-image{width:100%;aspect-ratio:16/9;background:#0e1014;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #1c1e26;font-size:11px;color:#6b6c76;cursor:pointer}
@@ -153,7 +147,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .visual-notes textarea{width:100%;background:#0e1014;color:#f5f5f5;padding:6px;border-radius:2px;border:1px solid #262833;font-size:10px;min-height:40px;font-family:inherit}
 .visual-notes textarea:focus{outline:0;border-color:#f5f5f5}
 
-/* Chat section */
+/* Chat */
 .chat-container{display:flex;flex-direction:column;height:100%;gap:8px}
 .chat-toggle{display:flex;gap:8px;margin-bottom:8px}
 .chat-toggle button{padding:6px 10px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:9px;color:#e5e6ee;cursor:pointer;text-transform:uppercase}
@@ -223,133 +217,77 @@ input[type="file"]{display:none}
         <div class="header-title" id="headerTitle">Projects Dashboard</div>
         <div class="header-actions">
           <span class="save-indicator" id="saveIndicator">Auto-save on</span>
-          <button class="btn secondary" id="backBtn" style="display:none" onclick="app.showDashboard()">← Back to Projects</button>
+          <button class="btn secondary" id="backBtn" style="display:none" onclick="app.showDashboard()">Back</button>
         </div>
       </div>
 
       <div class="content-area">
-        <!-- Dashboard View -->
         <div id="dashboardView">
           <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Total Projects</div>
-              <div class="stat-value" id="totalProjects">0</div>
-              <div class="stat-sub">Active productions</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Budget</div>
-              <div class="stat-value" id="totalBudget">—</div>
-              <div class="stat-sub">Across all projects</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Shooting Days</div>
-              <div class="stat-value" id="totalDays">0</div>
-              <div class="stat-sub">Scheduled</div>
-            </div>
+            <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value" id="totalProjects">0</div></div>
+            <div class="stat-card"><div class="stat-label">Total Budget</div><div class="stat-value" id="totalBudget">—</div></div>
+            <div class="stat-card"><div class="stat-label">Shooting Days</div><div class="stat-value" id="totalDays">0</div></div>
           </div>
-
           <div class="dashboard-title">All Projects</div>
           <div class="projects-grid" id="projectsGrid"></div>
         </div>
 
-        <!-- Project Editor -->
         <div id="projectEditorView" style="display:none;flex:1;flex-direction:column">
           <div class="tabs">
-            <button class="tab active" onclick="app.switchTab('budget')">💰 Budget</button>
-            <button class="tab" onclick="app.switchTab('shooting')">📅 Shooting Plan</button>
-            <button class="tab" onclick="app.switchTab('scripts')">📄 Scripts</button>
-            <button class="tab" onclick="app.switchTab('visuals')">🎞️ Visuals</button>
-            <button class="tab" onclick="app.switchTab('chat')">💬 Notes</button>
+            <button class="tab active" onclick="app.switchTab('budget')">Budget</button>
+            <button class="tab" onclick="app.switchTab('shooting')">Shooting</button>
+            <button class="tab" onclick="app.switchTab('scripts')">Scripts</button>
+            <button class="tab" onclick="app.switchTab('visuals')">Visuals</button>
+            <button class="tab" onclick="app.switchTab('chat')">Notes</button>
           </div>
 
           <div class="content-area">
-            <!-- Budget Tab -->
             <div id="budgetTab" class="tab-content active">
               <div class="budget-top">
-                <div class="budget-stat">
-                  <div class="budget-stat-label">Total Budget</div>
-                  <div class="budget-stat-value"><span id="currencySymbol">kr</span> <span id="budgetTotal">0.00</span></div>
-                </div>
-                <div class="budget-stat">
-                  <div class="budget-stat-label">Categories</div>
-                  <div class="budget-stat-value" id="budgetCategories">0</div>
-                </div>
+                <div class="budget-stat"><div class="budget-stat-label">Total</div><div class="budget-stat-value"><span id="currencySymbol">kr</span> <span id="budgetTotal">0.00</span></div></div>
+                <div class="budget-stat"><div class="budget-stat-label">Categories</div><div class="budget-stat-value" id="budgetCategories">0</div></div>
               </div>
               <div class="budget-controls">
                 <select class="budget-currency" id="currencySelect" onchange="app.changeCurrency()">
-                  <option value="NOK">NOK</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="SEK">SEK</option><option value="DKK">DKK</option>
+                  <option value="NOK">NOK</option><option value="USD">USD</option><option value="EUR">EUR</option>
                 </select>
-                <button class="btn secondary" onclick="app.addBudgetLine()">+ Add Line</button>
+                <button class="btn secondary" onclick="app.addBudgetLine()">Add</button>
               </div>
               <div class="budget-table-wrap">
-                <table class="data-table">
-                  <thead><tr><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead>
-                  <tbody id="budgetList"></tbody>
-                </table>
+                <table class="data-table"><thead><tr><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead><tbody id="budgetList"></tbody></table>
               </div>
             </div>
 
-            <!-- Shooting Tab -->
             <div id="shootingTab" class="tab-content">
               <div class="shooting-top">
-                <div class="shooting-stat">
-                  <div class="shooting-stat-label">Total Days</div>
-                  <div class="shooting-stat-value" id="totalShootingDays">0</div>
-                </div>
-                <div class="shooting-stat">
-                  <div class="shooting-stat-label">Locations</div>
-                  <div class="shooting-stat-value" id="uniqueLocations">0</div>
-                </div>
+                <div class="shooting-stat"><div class="shooting-stat-label">Days</div><div class="shooting-stat-value" id="totalShootingDays">0</div></div>
+                <div class="shooting-stat"><div class="shooting-stat-label">Locations</div><div class="shooting-stat-value" id="uniqueLocations">0</div></div>
               </div>
-              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addShootingDay()">+ Add Day</button>
-              <div class="shooting-table-wrap">
-                <table class="data-table">
-                  <thead><tr><th>Date</th><th>Location</th><th>Scenes</th><th>Notes</th><th></th></tr></thead>
-                  <tbody id="shootingList"></tbody>
-                </table>
+              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addShootingDay()">Add Day</button>
+              <div class="budget-table-wrap">
+                <table class="data-table"><thead><tr><th>Date</th><th>Location</th><th>Scenes</th><th>Notes</th><th></th></tr></thead><tbody id="shootingList"></tbody></table>
               </div>
             </div>
 
-            <!-- Scripts Tab -->
             <div id="scriptsTab" class="tab-content">
-              <div class="scripts-top">
-                <label class="scripts-upload" onclick="document.getElementById('scriptFileInput').click()">
-                  <div class="scripts-upload-icon">📤</div>
-                  <div class="scripts-upload-text">Click to upload scripts or documents</div>
-                  <input type="file" id="scriptFileInput" accept=".pdf,.fdx,.doc,.docx,.txt" onchange="app.handleScriptUpload()">
-                </label>
-                <div class="scripts-list-card">
-                  <div style="font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:6px">Scripts</div>
-                  <div id="scriptsList" style="display:flex;flex-direction:column;gap:4px"></div>
-                </div>
-              </div>
-              <div class="scripts-viewer">
-                <div class="scripts-viewer-title">PDF Viewer</div>
-                <div id="scriptViewerEmpty" style="text-align:center;color:#6b6c76">Select a PDF to view it here</div>
-                <iframe id="scriptIframe"></iframe>
-              </div>
+              <label class="scripts-upload" onclick="document.getElementById('scriptFileInput').click()">
+                <div>Upload Scripts</div>
+                <input type="file" id="scriptFileInput" accept=".pdf,.doc,.docx,.txt" onchange="app.handleScriptUpload()">
+              </label>
+              <div class="scripts-list-card"><div style="font-size:9px;font-weight:600;color:#6b6c76;margin-bottom:6px">Uploaded</div><div id="scriptsList"></div></div>
+              <div class="scripts-viewer"><div id="scriptViewerEmpty">Select a PDF</div><iframe id="scriptIframe"></iframe></div>
             </div>
 
-            <!-- Visuals Tab -->
             <div id="visualsTab" class="tab-content">
-              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addStoryboard()">+ Add Frame</button>
+              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addStoryboard()">Add Frame</button>
               <div class="visuals-grid" id="storyboardsList"></div>
             </div>
 
-            <!-- Chat Tab -->
             <div id="chatTab" class="tab-content">
               <div class="chat-container">
-                <div class="chat-toggle">
-                  <button class="active" id="projectChatBtn" onclick="app.setChatScope('project')">Project Notes</button>
-                  <button id="publicChatBtn" onclick="app.setChatScope('public')">Public Notes</button>
-                </div>
+                <div class="chat-toggle"><button class="active" id="projectChatBtn" onclick="app.setChatScope('project')">Project</button><button id="publicChatBtn" onclick="app.setChatScope('public')">Public</button></div>
                 <div class="messages-area" id="messagesArea"></div>
-                <div class="input-area" id="inputArea">
-                  <input type="text" id="messageInput" class="message-input" placeholder="Add note">
-                  <button class="attach-btn" onclick="document.getElementById('fileInput').click()">Attach</button>
-                  <button class="send-btn" onclick="app.sendMessage()">Send</button>
-                  <input type="file" id="fileInput" onchange="app.handleFileSelect()">
-                </div>
+                <div class="input-area"><input type="text" id="messageInput" class="message-input" placeholder="Add note"><button class="attach-btn" onclick="document.getElementById('fileInput').click()">Attach</button><button class="send-btn" onclick="app.sendMessage()">Send</button><input type="file" id="fileInput" onchange="app.handleFileSelect()"></div>
               </div>
             </div>
           </div>
@@ -359,15 +297,11 @@ input[type="file"]{display:none}
   </div>
 </div>
 
-<!-- New project modal -->
 <div id="newProjectModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:50">
-  <div style="background:#0b0d12;border-radius:3px;padding:14px;border:1px solid #1c1e26;min-width:300px">
-    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:8px">New Project</div>
+  <div style="background:#0b0d12;border-radius:3px;padding:14px;border:1px solid #1c1e26">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px">New Project</div>
     <input id="newProjectNameInput" type="text" placeholder="Project name" style="width:100%;padding:8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:12px;margin-bottom:10px;color:#f5f5f5">
-    <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button onclick="app.closeNewProjectModal()" style="padding:6px 10px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:10px;cursor:pointer;color:#e5e6ee">Cancel</button>
-      <button onclick="app.createProjectFromModal()" style="padding:6px 12px;border-radius:3px;border:1px solid #f5f5f5;background:#f5f5f5;color:#050608;font-size:10px;font-weight:600;cursor:pointer;text-transform:uppercase">Create</button>
-    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px"><button onclick="app.closeNewProjectModal()" style="padding:6px 10px;border:1px solid #262833;background:#101218;cursor:pointer;color:#e5e6ee">Cancel</button><button onclick="app.createProjectFromModal()" style="padding:6px 12px;background:#f5f5f5;color:#050608;cursor:pointer">Create</button></div>
   </div>
 </div>
 
@@ -420,7 +354,7 @@ const app = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(this.currentProject)
     });
-    document.getElementById('saveIndicator').textContent = 'Last saved ' + new Date().toLocaleTimeString();
+    document.getElementById('saveIndicator').textContent = 'Saved ' + new Date().toLocaleTimeString();
   },
 
   async loadProjects() {
@@ -444,49 +378,35 @@ const app = {
     this.currentProject = null;
     document.getElementById('dashboardView').style.display = 'block';
     document.getElementById('projectEditorView').style.display = 'none';
-    document.getElementById('navProjects').classList.add('active');
-    document.getElementById('navProject').style.display = 'none';
-    document.getElementById('backBtn').style.display = 'none';
     document.getElementById('headerTitle').textContent = 'Projects Dashboard';
     this.renderDashboard();
   },
 
   renderDashboard() {
-    const stats = {
-      totalProjects: this.projects.length,
-      totalBudget: this.projects.reduce((sum, p) => sum + (p.budget?.items || []).reduce((s, i) => s + (parseFloat(i.amount) || 0), 0), 0),
-      totalDays: this.projects.reduce((sum, p) => sum + (p.shooting?.length || 0), 0)
-    };
+    const totalBudget = this.projects.reduce((sum, p) => sum + (p.budget?.items || []).reduce((s, i) => s + (parseFloat(i.amount) || 0), 0), 0);
+    const totalDays = this.projects.reduce((sum, p) => sum + (p.shooting?.length || 0), 0);
 
-    document.getElementById('totalProjects').textContent = stats.totalProjects;
-    document.getElementById('totalBudget').textContent = stats.totalBudget > 0 ? 'kr ' + stats.totalBudget.toFixed(0) : '—';
-    document.getElementById('totalDays').textContent = stats.totalDays;
+    document.getElementById('totalProjects').textContent = this.projects.length;
+    document.getElementById('totalBudget').textContent = totalBudget > 0 ? 'kr ' + totalBudget.toFixed(0) : '—';
+    document.getElementById('totalDays').textContent = totalDays;
 
     const filtered = this.getFilteredProjects();
-    const html = filtered.map(p => `
-      <div class="project-card" onclick="app.openProject('${p.id}')">
-        <div class="project-card-header">
-          <div><h4>${p.name}</h4><div class="project-meta">Updated ${p.updatedAt || '—'}</div></div>
-          <span class="project-chip">${(p.shooting?.length || 0) > 0 ? 'Shooting' : 'Planning'}</span>
-        </div>
-        <div class="project-card-actions">
-          <button onclick="event.stopPropagation();app.openProject('${p.id}')">Open</button>
-          <button onclick="event.stopPropagation();app.deleteProject('${p.id}')">Delete</button>
-        </div>
-      </div>
-    `).join('');
-
-    document.getElementById('projectsGrid').innerHTML = html || '<div class="empty-text">No projects. Create one to start.</div>';
+    let html = '';
+    filtered.forEach(p => {
+      html += '<div class="project-card" onclick="app.openProject(' + p.id + ')" style="cursor:pointer"><div class="project-card-header"><div><h4>' + (p.name || 'Untitled') + '</h4><div class="project-meta">Updated ' + (p.updatedAt || '-') + '</div></div><span class="project-chip">' + ((p.shooting && p.shooting.length) ? 'Shooting' : 'Planning') + '</span></div><div class="project-card-actions"><button onclick="event.stopPropagation();app.openProject(' + p.id + ')">Open</button><button onclick="event.stopPropagation();app.deleteProject(' + p.id + ')">Delete</button></div></div>';
+    });
+    document.getElementById('projectsGrid').innerHTML = html || '<div class="empty-text">No projects</div>';
     this.renderSidebar();
   },
 
   renderSidebar() {
     const filtered = this.getFilteredProjects();
-    const html = filtered.map(p => {
+    let html = '';
+    filtered.forEach(p => {
       const isActive = this.currentProject && this.currentProject.id === p.id ? ' active' : '';
-      return `<button class="sidebar-btn${isActive}" onclick="app.openProject('${p.id}')">${p.name}</button>`;
-    }).join('');
-    document.getElementById('projectsList').innerHTML = html || '<div class="empty-text" style="padding:6px">No projects</div>';
+      html += '<button class="sidebar-btn' + isActive + '" onclick="app.openProject(' + p.id + ')" style="cursor:pointer">' + (p.name || 'Untitled') + '</button>';
+    });
+    document.getElementById('projectsList').innerHTML = html || '<div class="empty-text">No projects</div>';
   },
 
   getFilteredProjects() {
@@ -516,7 +436,7 @@ const app = {
     this.closeNewProjectModal();
     this.currentProject = {
       id: Date.now(),
-      name,
+      name: name,
       scripts: [],
       storyboards: [],
       budget: { currency: 'NOK', items: [] },
@@ -528,7 +448,7 @@ const app = {
   },
 
   openProject(id) {
-    this.currentProject = this.projects.find(p => p.id === id);
+    this.currentProject = this.projects.find(p => p.id == id);
     if (!this.currentProject) return;
     if (!this.currentProject.scripts) this.currentProject.scripts = [];
     this.showProjectEditor();
@@ -539,10 +459,6 @@ const app = {
   showProjectEditor() {
     document.getElementById('dashboardView').style.display = 'none';
     document.getElementById('projectEditorView').style.display = 'flex';
-    document.getElementById('navProjects').classList.remove('active');
-    document.getElementById('navProject').style.display = 'inline-block';
-    document.getElementById('navProject').classList.add('active');
-    document.getElementById('backBtn').style.display = 'inline-block';
     document.getElementById('headerTitle').textContent = this.currentProject.name;
   },
 
@@ -551,10 +467,10 @@ const app = {
   },
 
   async deleteProject(id) {
-    if (!confirm('Delete this project?')) return;
+    if (!confirm('Delete?')) return;
     await fetch('/api/projects/' + id, { method: 'DELETE' });
-    this.projects = this.projects.filter(p => p.id !== id);
-    if (this.currentProject?.id === id) this.showDashboard();
+    this.projects = this.projects.filter(p => p.id != id);
+    if (this.currentProject && this.currentProject.id == id) this.showDashboard();
     else this.renderDashboard();
   },
 
@@ -574,7 +490,6 @@ const app = {
     this.renderStoryboards();
   },
 
-  /* Budget */
   addBudgetLine() {
     this.currentProject.budget.items.push({ id: Date.now(), category: '', description: '', amount: 0 });
     this.renderBudget();
@@ -582,29 +497,25 @@ const app = {
 
   renderBudget() {
     const items = this.currentProject.budget.items || [];
-    const rows = items.map(item => `
-      <tr>
-        <td><input type="text" value="${item.category}" onchange="app.updateBudget(${item.id}, 'category', this.value)"></td>
-        <td><input type="text" value="${item.description}" onchange="app.updateBudget(${item.id}, 'description', this.value)"></td>
-        <td><input type="number" value="${item.amount}" onchange="app.updateBudget(${item.id}, 'amount', this.value)"></td>
-        <td><button class="delete-btn" onclick="app.deleteBudgetLine(${item.id})">Delete</button></td>
-      </tr>
-    `).join('');
-    document.getElementById('budgetList').innerHTML = rows || '<tr><td colspan="4" class="empty-text">No budget lines</td></tr>';
+    let rows = '';
+    items.forEach(item => {
+      rows += '<tr><td><input type="text" value="' + item.category + '" onchange="app.updateBudget(' + item.id + ',\'category\',this.value)"></td><td><input type="text" value="' + item.description + '" onchange="app.updateBudget(' + item.id + ',\'description\',this.value)"></td><td><input type="number" value="' + item.amount + '" onchange="app.updateBudget(' + item.id + ',\'amount\',this.value)"></td><td><button class="delete-btn" onclick="app.deleteBudgetLine(' + item.id + ')">Delete</button></td></tr>';
+    });
+    document.getElementById('budgetList').innerHTML = rows || '<tr><td colspan="4" class="empty-text">No items</td></tr>';
     const total = items.reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
     document.getElementById('budgetTotal').textContent = total.toFixed(2);
     document.getElementById('budgetCategories').textContent = new Set(items.map(i => i.category)).size;
   },
 
   updateBudget(id, field, value) {
-    const item = this.currentProject.budget.items.find(i => i.id === id);
+    const item = this.currentProject.budget.items.find(i => i.id == id);
     if (!item) return;
     item[field] = field === 'amount' ? parseFloat(value) || 0 : value;
     this.renderBudget();
   },
 
   deleteBudgetLine(id) {
-    this.currentProject.budget.items = this.currentProject.budget.items.filter(i => i.id !== id);
+    this.currentProject.budget.items = this.currentProject.budget.items.filter(i => i.id != id);
     this.renderBudget();
   },
 
@@ -620,7 +531,6 @@ const app = {
     document.getElementById('currencySymbol').textContent = map[value] || '$';
   },
 
-  /* Shooting */
   addShootingDay() {
     this.currentProject.shooting.push({ id: Date.now(), date: '', location: '', scenes: '', notes: '' });
     this.renderShooting();
@@ -628,32 +538,26 @@ const app = {
 
   renderShooting() {
     const days = this.currentProject.shooting || [];
-    const rows = days.map(day => `
-      <tr>
-        <td><input type="text" value="${day.date}" onchange="app.updateShooting(${day.id}, 'date', this.value)"></td>
-        <td><input type="text" value="${day.location}" onchange="app.updateShooting(${day.id}, 'location', this.value)"></td>
-        <td><input type="text" value="${day.scenes}" onchange="app.updateShooting(${day.id}, 'scenes', this.value)"></td>
-        <td><input type="text" value="${day.notes}" onchange="app.updateShooting(${day.id}, 'notes', this.value)"></td>
-        <td><button class="delete-btn" onclick="app.deleteShootingDay(${day.id})">Delete</button></td>
-      </tr>
-    `).join('');
-    document.getElementById('shootingList').innerHTML = rows || '<tr><td colspan="5" class="empty-text">No shooting days</td></tr>';
+    let rows = '';
+    days.forEach(day => {
+      rows += '<tr><td><input type="text" value="' + day.date + '" onchange="app.updateShooting(' + day.id + ',\'date\',this.value)"></td><td><input type="text" value="' + day.location + '" onchange="app.updateShooting(' + day.id + ',\'location\',this.value)"></td><td><input type="text" value="' + day.scenes + '" onchange="app.updateShooting(' + day.id + ',\'scenes\',this.value)"></td><td><input type="text" value="' + day.notes + '" onchange="app.updateShooting(' + day.id + ',\'notes\',this.value)"></td><td><button class="delete-btn" onclick="app.deleteShootingDay(' + day.id + ')">Delete</button></td></tr>';
+    });
+    document.getElementById('shootingList').innerHTML = rows || '<tr><td colspan="5" class="empty-text">No days</td></tr>';
     document.getElementById('totalShootingDays').textContent = days.length;
     const locs = new Set(days.map(d => d.location).filter(l => l));
     document.getElementById('uniqueLocations').textContent = locs.size;
   },
 
   updateShooting(id, field, value) {
-    const day = this.currentProject.shooting.find(d => d.id === id);
+    const day = this.currentProject.shooting.find(d => d.id == id);
     if (day) day[field] = value;
   },
 
   deleteShootingDay(id) {
-    this.currentProject.shooting = this.currentProject.shooting.filter(d => d.id !== id);
+    this.currentProject.shooting = this.currentProject.shooting.filter(d => d.id != id);
     this.renderShooting();
   },
 
-  /* Scripts */
   handleScriptUpload() {
     const file = document.getElementById('scriptFileInput').files[0];
     if (!file) return;
@@ -675,46 +579,32 @@ const app = {
 
   renderScripts() {
     const scripts = this.currentProject.scripts || [];
-    const html = scripts.map(s => `
-      <div class="script-item" onclick="app.showScript(${s.id})">
-        ${s.name}
-        <button onclick="event.stopPropagation();app.deleteScript(${s.id})" style="float:right;background:none;border:none;color:#a0a1af;cursor:pointer">✕</button>
-      </div>
-    `).join('');
-    document.getElementById('scriptsList').innerHTML = html || '<div class="empty-text">No scripts uploaded</div>';
+    let html = '';
+    scripts.forEach(s => {
+      html += '<div class="script-item" onclick="app.showScript(' + s.id + ')" style="cursor:pointer">' + s.name + ' <button onclick="event.stopPropagation();app.deleteScript(' + s.id + ')" style="float:right;background:none;border:none;color:#a0a1af;cursor:pointer">x</button></div>';
+    });
+    document.getElementById('scriptsList').innerHTML = html || '<div class="empty-text">No scripts</div>';
   },
 
   showScript(id) {
-    const s = this.currentProject.scripts.find(x => x.id === id);
+    const s = this.currentProject.scripts.find(x => x.id == id);
     if (!s) return;
-    if (s.type?.includes('pdf') || s.name?.endsWith('.pdf')) {
+    if ((s.type && s.type.indexOf('pdf') !== -1) || (s.name && s.name.endsWith('.pdf'))) {
       document.getElementById('scriptViewerEmpty').style.display = 'none';
       document.getElementById('scriptIframe').style.display = 'block';
       document.getElementById('scriptIframe').src = s.data;
     } else {
       document.getElementById('scriptViewerEmpty').style.display = 'block';
-      document.getElementById('scriptViewerEmpty').textContent = 'Preview not available. Click to download: ' + s.name;
-      document.getElementById('scriptViewerEmpty').style.cursor = 'pointer';
-      document.getElementById('scriptViewerEmpty').onclick = () => this.downloadScript(id);
+      document.getElementById('scriptViewerEmpty').innerHTML = 'Preview not available';
       document.getElementById('scriptIframe').style.display = 'none';
     }
   },
 
-  downloadScript(id) {
-    const s = this.currentProject.scripts.find(x => x.id === id);
-    if (!s) return;
-    const a = document.createElement('a');
-    a.href = s.data;
-    a.download = s.name;
-    a.click();
-  },
-
   deleteScript(id) {
-    this.currentProject.scripts = this.currentProject.scripts.filter(x => x.id !== id);
+    this.currentProject.scripts = this.currentProject.scripts.filter(x => x.id != id);
     this.renderScripts();
   },
 
-  /* Storyboards */
   addStoryboard() {
     this.currentProject.storyboards.push({ id: Date.now(), image: null, notes: '' });
     this.renderStoryboards();
@@ -722,17 +612,10 @@ const app = {
 
   renderStoryboards() {
     const items = this.currentProject.storyboards || [];
-    const html = items.map(sb => `
-      <div class="visual-card">
-        <label class="visual-image">
-          ${sb.image ? `<img src="${sb.image}">` : 'Upload frame'}
-          <input type="file" accept="image/*" onchange="app.uploadStoryboard(${sb.id}, this)">
-        </label>
-        <div class="visual-notes">
-          <textarea placeholder="Notes" onchange="app.updateStoryNotes(${sb.id}, this.value)">${sb.notes || ''}</textarea>
-        </div>
-      </div>
-    `).join('');
+    let html = '';
+    items.forEach(sb => {
+      html += '<div class="visual-card"><label class="visual-image" style="cursor:pointer">' + (sb.image ? '<img src="' + sb.image + '">' : 'Upload') + '<input type="file" accept="image/*" onchange="app.uploadStoryboard(' + sb.id + ',this)"></label><div class="visual-notes"><textarea placeholder="Notes" onchange="app.updateStoryNotes(' + sb.id + ',this.value)">' + (sb.notes || '') + '</textarea></div></div>';
+    });
     document.getElementById('storyboardsList').innerHTML = html || '<div class="empty-text">No frames</div>';
   },
 
@@ -741,7 +624,7 @@ const app = {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (e) => {
-      const item = this.currentProject.storyboards.find(s => s.id === id);
+      const item = this.currentProject.storyboards.find(s => s.id == id);
       if (item) {
         item.image = e.target.result;
         this.renderStoryboards();
@@ -751,11 +634,10 @@ const app = {
   },
 
   updateStoryNotes(id, value) {
-    const item = this.currentProject.storyboards.find(s => s.id === id);
+    const item = this.currentProject.storyboards.find(s => s.id == id);
     if (item) item.notes = value;
   },
 
-  /* Chat */
   handleFileSelect() {
     const file = document.getElementById('fileInput').files[0];
     if (!file) return;
@@ -774,7 +656,7 @@ const app = {
     if (existing) existing.remove();
     const div = document.createElement('div');
     div.className = 'file-preview';
-    div.innerHTML = `${this.selectedFile.name} <button onclick="app.removeFile()" type="button">✕</button>`;
+    div.innerHTML = this.selectedFile.name + ' <button onclick="app.removeFile()" type="button">x</button>';
     inputArea.insertBefore(div, inputArea.querySelector('.message-input').nextSibling);
   },
 
@@ -796,11 +678,11 @@ const app = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: Date.now(),
-        text,
+        text: text,
         file: this.selectedFile,
         timestamp: new Date().toLocaleString(),
-        scope,
-        projectId
+        scope: scope,
+        projectId: projectId
       })
     });
 
@@ -833,23 +715,18 @@ const app = {
 
   renderChat() {
     const messages = this.currentChatScope === 'public' ? this.publicMessages : this.projectMessages;
-    const html = messages.map(m => {
-      const fileHtml = m.file ? `<br><a class="message-file" onclick="app.downloadFile('${m.file.data}','${m.file.name}')">📎 ${m.file.name}</a>` : '';
-      return `
-        <div class="message-item">
-          <div class="message-text">${m.text || ''}${fileHtml}</div>
-          <div class="message-meta">${m.timestamp}</div>
-        </div>
-      `;
-    }).join('');
-    document.getElementById('messagesArea').innerHTML = html || '<div class="empty-text">No notes yet</div>';
+    let html = '';
+    messages.forEach(m => {
+      const fileHtml = m.file ? '<br><a class="message-file" onclick="app.downloadFile(\'' + m.file.data + '\',\'' + m.file.name + '\')">File: ' + m.file.name + '</a>' : '';
+      html += '<div class="message-item"><div class="message-text">' + (m.text || '') + fileHtml + '</div><div class="message-meta">' + m.timestamp + '</div></div>';
+    });
+    document.getElementById('messagesArea').innerHTML = html || '<div class="empty-text">No notes</div>';
     const area = document.getElementById('messagesArea');
     area.scrollTop = area.scrollHeight;
   }
 };
-
-app.init = function() {};
-</script></body></html>`);
+</script></body></html>`;
+  res.send(html);
 });
 
 app.get('/api/projects', (req, res) => {
@@ -905,5 +782,5 @@ app.post('/api/messages', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`MaxFilm running on port ${PORT}`);
+  console.log('MaxFilm running on port ' + PORT);
 });
