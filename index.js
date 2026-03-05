@@ -26,215 +26,186 @@ function saveDB(data) {
 }
 
 app.get('/', (req, res) => {
-  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+  res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MaxFilm</title><style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#050608;color:#f5f5f5}
-
-/* Layout base */
-.screen{display:none}
-.screen.active{display:flex}
-.app-container{display:flex;width:100%;height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#050608;color:#f5f5f5;overflow:hidden}
+.screen{display:none}.screen.active{display:flex}
+.app-wrapper{display:flex;width:100%;height:100vh}
 
 /* Auth */
-.auth-screen{width:100%;height:100vh;display:flex;align-items:center;justify-content:center;background:#050608}
+.auth-screen{width:100%;height:100%;align-items:center;justify-content:center}
 .auth-box{width:100%;max-width:360px;padding:32px 28px;background:#0e1014;border-radius:4px;border:1px solid #252731;text-align:center}
 .auth-box h1{font-size:22px;margin-bottom:6px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase}
 .auth-tagline{color:#a0a0ab;font-size:12px;margin-bottom:18px}
 .form-group{margin-bottom:18px;text-align:left}
 .form-group label{display:block;font-size:10px;font-weight:500;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.16em;color:#8a8b93}
 .form-group input{width:100%;padding:9px 9px;background:#101219;border-radius:3px;border:1px solid #2b2d39;color:#f5f5f5;font-size:13px}
-.form-group input:focus{outline:0;border-color:#f5f5f5;background:#111319}
+.form-group input:focus{outline:0;border-color:#f5f5f5}
 .auth-btn{width:100%;padding:9px;background:#f5f5f5;border-radius:3px;border:1px solid #f5f5f5;color:#050608;font-weight:500;font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:0.16em}
 .auth-btn:hover{background:#ffffff}
-.auth-hint{margin-top:10px;font-size:10px;color:#6b6c76}
 
 /* Sidebar */
-.sidebar{width:240px;background:#050608;border-right:1px solid #1c1e26;display:flex;flex-direction:column;overflow:hidden}
-.sidebar-header{padding:14px 16px;border-bottom:1px solid #1c1e26}
+.sidebar{width:240px;background:#050608;border-right:1px solid #1c1e26;display:flex;flex-direction:column;overflow-y:auto;height:100vh}
+.sidebar-header{padding:12px 14px;border-bottom:1px solid #1c1e26}
 .sidebar-header h2{font-size:13px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase}
-.sidebar-sub{font-size:10px;color:#6b6c76;margin-top:4px}
-.sidebar-nav{display:flex;gap:6px;margin-top:10px}
-.sidebar-nav button{flex:1;padding:6px 6px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:10px;font-weight:500;cursor:pointer;color:#d8d9e0;text-transform:uppercase;letter-spacing:0.12em}
+.sidebar-nav{display:flex;gap:6px;margin-top:8px}
+.sidebar-nav button{flex:1;padding:6px 6px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:9px;font-weight:500;cursor:pointer;color:#d8d9e0;text-transform:uppercase}
 .sidebar-nav button.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
-
-/* Sidebar content */
-.sidebar-content{flex:1;padding:10px 12px;overflow-y:auto}
-.projects-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:0 2px}
-.projects-label{font-size:9px;font-weight:500;color:#6b6c76;text-transform:uppercase;letter-spacing:0.16em}
-.projects-count{font-size:9px;color:#494a55}
+.sidebar-content{flex:1;padding:10px 10px;overflow-y:auto}
+.projects-label{font-size:9px;font-weight:500;color:#6b6c76;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:6px;padding:0 2px}
 .project-search{margin-bottom:8px}
 .project-search input{width:100%;padding:7px 8px;border-radius:999px;border:1px solid #262833;font-size:11px;background:#101218;color:#f5f5f5}
-.project-search input:focus{outline:0;border-color:#f5f5f5;background:#0f1117}
+.project-search input:focus{outline:0;border-color:#f5f5f5}
 .sidebar-projects{display:flex;flex-direction:column;gap:4px}
-.sidebar-btn{width:100%;padding:7px 9px;background:#0e1014;border-radius:3px;border:1px solid #1d1f28;color:#f5f5f5;font-size:11px;font-weight:500;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px}
+.sidebar-btn{width:100%;padding:7px 8px;background:#0e1014;border-radius:3px;border:1px solid #1d1f28;color:#f5f5f5;font-size:10px;font-weight:500;cursor:pointer;text-align:left}
 .sidebar-btn:hover{border-color:#3b3d49}
 .sidebar-btn.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
-.sidebar-btn span{font-size:9px;color:#767787}
-
-/* Sidebar footer */
-.sidebar-footer{margin-top:auto;padding:10px 12px;border-top:1px solid #1c1e26;display:flex;gap:8px}
-.sidebar-footer button{flex:1;padding:7px 8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:10px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;color:#e5e6ee}
+.sidebar-footer{margin-top:auto;padding:10px 10px;border-top:1px solid #1c1e26;display:flex;gap:8px}
+.sidebar-footer button{flex:1;padding:7px 8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:9px;font-weight:500;cursor:pointer;text-transform:uppercase;color:#e5e6ee}
 .sidebar-footer button:first-child{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
-.sidebar-footer button:hover{border-color:#3b3d49}
 
 /* Main */
-.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#050608}
-.header{padding:10px 18px;background:#050608;border-bottom:1px solid #1c1e26;display:flex;justify-content:space-between;align-items:center}
-.header-left{display:flex;flex-direction:column;gap:2px}
-.header-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.18em;color:#e5e6ee}
-.header-breadcrumb{font-size:10px;color:#6b6c76}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#050608;height:100vh}
+.header{padding:12px 18px;background:#050608;border-bottom:1px solid #1c1e26;display:flex;justify-content:space-between;align-items:center;min-height:50px}
+.header-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em}
 .header-actions{display:flex;gap:8px}
 .btn{padding:7px 11px;background:#f5f5f5;border-radius:3px;border:1px solid #f5f5f5;color:#050608;font-size:10px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
 .btn.secondary{background:transparent;color:#e5e6ee;border-color:#3a3c46}
 .btn.secondary:hover{background:#111219}
 .btn:hover{background:#ffffff}
+.save-indicator{font-size:9px;color:#6b6c76}
 
-/* Save indicator: small, in header-right (reused element) */
-.save-indicator{font-size:9px;color:#6b6c76;margin-left:10px}
-
-/* Content wrapper */
-.content{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#050608}
+/* Content area */
+.content-area{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#050608}
 
 /* Dashboard */
-.dashboard{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px}
-.dashboard-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.welcome-card,.hint-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:11px 12px;font-size:11px;color:#b1b2c0}
-.welcome-card h3{font-size:12px;font-weight:500;margin-bottom:4px;letter-spacing:0.12em;text-transform:uppercase}
-.welcome-steps li{margin-left:14px;margin-bottom:3px}
-
-/* Projects grid */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.project-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;gap:5px}
+#dashboardView{display:flex;flex-direction:column;padding:16px 18px;overflow-y:auto;gap:12px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+.stat-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;display:flex;flex-direction:column;gap:4px}
+.stat-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#6b6c76}
+.stat-value{font-size:24px;font-weight:700;color:#d4c6b3}
+.stat-sub{font-size:10px;color:#8a8b93}
+.dashboard-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#d4c6b3;margin-top:8px}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.project-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
 .project-card:hover{border-color:#3b3d49}
-.project-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
-.project-card h4{font-size:12px;font-weight:500}
-.project-chip{font-size:9px;padding:2px 6px;border-radius:2px;background:#151823;color:#d4c6b3;font-weight:500;text-transform:uppercase;letter-spacing:0.14em}
+.project-card-header{display:flex;justify-content:space-between;align-items:flex-start}
+.project-card h4{font-size:12px;font-weight:600}
+.project-chip{font-size:9px;padding:2px 6px;border-radius:2px;background:#151823;color:#d4c6b3;font-weight:500;text-transform:uppercase}
 .project-meta{font-size:9px;color:#77798a}
-.project-card-actions{display:flex;gap:6px;margin-top:3px}
-.project-card-actions button{flex:1;padding:4px 0;border-radius:2px;background:#101218;border:1px solid #262833;color:#f5f5f5;font-size:9px;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
+.project-card-actions{display:flex;gap:6px}
+.project-card-actions button{flex:1;padding:5px;border-radius:2px;background:#101218;border:1px solid #262833;color:#f5f5f5;font-size:9px;cursor:pointer;text-transform:uppercase}
 .project-card-actions button:hover{border-color:#3b3d49}
 
 /* Tabs */
-.tabs{display:flex;gap:0;border-bottom:1px solid #1c1e26;background:#050608;padding:0 18px}
-.tab{padding:8px 10px;background:transparent;border:none;border-bottom:2px solid transparent;color:#6b6c76;font-size:10px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
+.tabs{display:flex;gap:0;border-bottom:1px solid #1c1e26;background:#050608;padding:0 18px;flex-wrap:wrap}
+.tab{padding:10px 12px;background:transparent;border:none;border-bottom:2px solid transparent;color:#6b6c76;font-size:10px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
 .tab.active{color:#f5f5f5;border-bottom-color:#f5f5f5}
 
-/* Common scrollbars */
+/* Tab content */
+.tab-content{flex:1;overflow-y:auto;padding:16px 18px;display:none}
+.tab-content.active{display:block}
+
+/* Budget section */
+.budget-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.budget-stat{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px}
+.budget-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:6px}
+.budget-stat-value{font-size:20px;font-weight:700;color:#d4c6b3}
+.budget-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
+.budget-currency{padding:7px 9px;background:#101218;border-radius:3px;border:1px solid #262833;font-size:10px;color:#f5f5f5}
+.budget-table-wrap{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow-x:auto;margin-bottom:12px}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{background:#0e1014;padding:9px;text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;border-bottom:1px solid #1c1e26;color:#8a8b93}
+.data-table td{padding:8px 9px;border-bottom:1px solid #161924;font-size:11px}
+.data-table input{width:100%;background:transparent;border:none;color:#f5f5f5;font-size:10px}
+.data-table input:focus{outline:0;background:#101218}
+.delete-btn{background:#101218;border-radius:2px;border:1px solid #262833;color:#a0a1af;padding:4px 6px;font-size:9px;cursor:pointer;text-transform:uppercase}
+.delete-btn:hover{border-color:#3b3d49}
+
+/* Shooting section */
+.shooting-top{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.shooting-stat{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:10px}
+.shooting-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:4px}
+.shooting-stat-value{font-size:18px;font-weight:700;color:#d4c6b3}
+.shooting-table-wrap{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow-x:auto}
+
+/* Scripts section */
+.scripts-top{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px}
+.scripts-upload{background:#0b0d12;border-radius:3px;border:2px dashed #262833;padding:16px;text-align:center;cursor:pointer}
+.scripts-upload:hover{border-color:#3b3d49}
+.scripts-upload-icon{font-size:24px;margin-bottom:8px}
+.scripts-upload-text{font-size:11px;color:#8a8b93}
+.scripts-list-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;display:flex;flex-direction:column;gap:6px}
+.script-item{padding:6px;background:#0e1014;border-radius:2px;border:1px solid #1d1f28;font-size:10px;cursor:pointer}
+.script-item:hover{border-color:#3b3d49}
+.script-item.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
+.scripts-viewer{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px;flex:1;display:flex;flex-direction:column}
+.scripts-viewer-title{font-size:10px;color:#6b6c76;margin-bottom:8px}
+#scriptIframe{width:100%;flex:1;border:none;border-radius:2px;background:#050608}
+
+/* Visuals section */
+.visuals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.visual-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow:hidden;display:flex;flex-direction:column}
+.visual-image{width:100%;aspect-ratio:16/9;background:#0e1014;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #1c1e26;font-size:11px;color:#6b6c76;cursor:pointer}
+.visual-image img{width:100%;height:100%;object-fit:cover}
+.visual-notes{padding:8px}
+.visual-notes textarea{width:100%;background:#0e1014;color:#f5f5f5;padding:6px;border-radius:2px;border:1px solid #262833;font-size:10px;min-height:40px;font-family:inherit}
+.visual-notes textarea:focus{outline:0;border-color:#f5f5f5}
+
+/* Chat section */
+.chat-container{display:flex;flex-direction:column;height:100%;gap:8px}
+.chat-toggle{display:flex;gap:8px;margin-bottom:8px}
+.chat-toggle button{padding:6px 10px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:9px;color:#e5e6ee;cursor:pointer;text-transform:uppercase}
+.chat-toggle button.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
+.messages-area{flex:1;overflow-y:auto;background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:12px}
+.message-item{margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #161924}
+.message-text{font-size:11px;color:#f5f5f5;margin-bottom:3px;word-break:break-word}
+.message-file{display:inline-block;padding:4px 7px;background:#101218;border-radius:999px;border:1px solid #262833;font-size:9px;text-decoration:none;color:#f5f5f5;margin:3px 0;cursor:pointer}
+.message-file:hover{border-color:#3b3d49}
+.message-meta{font-size:9px;color:#77798a}
+.input-area{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:8px;display:flex;gap:8px;flex-wrap:wrap}
+.message-input{flex:1;padding:7px 8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:11px;min-height:32px;color:#f5f5f5;min-width:200px}
+.file-preview{padding:6px 8px;background:#101218;border-radius:999px;border:1px solid #262833;font-size:9px;display:flex;gap:6px;align-items:center}
+.file-preview button{background:transparent;border:none;color:#a0a1af;cursor:pointer}
+.attach-btn{padding:6px 8px;background:#101218;border-radius:3px;border:1px solid #262833;cursor:pointer;font-size:9px;color:#e5e6ee;text-transform:uppercase}
+.send-btn{padding:6px 9px;background:#f5f5f5;border-radius:3px;border:1px solid #f5f5f5;color:#050608;cursor:pointer;font-size:9px;font-weight:500;text-transform:uppercase}
+
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:#050608}
 ::-webkit-scrollbar-thumb{background:#2b2d38;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#3e404c}
 input[type="file"]{display:none}
-.empty-text{font-size:11px;color:#6b6c76}
-
-/* Scripts: split layout */
-#scriptsTab{flex:1;display:flex;flex-direction:column;min-height:0}
-.scripts-header{padding:10px 18px;background:#050608;border-bottom:1px solid #1c1e26;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.16em;color:#d4c6b3}
-.scripts-body{flex:1;display:flex;flex-direction:column;padding:10px 18px 14px 18px;gap:8px;min-height:0}
-.scripts-layout{flex:1;display:flex;gap:10px;min-height:0}
-.scripts-list-pane{width:260px;min-width:220px;max-width:320px;background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:9px 9px;display:flex;flex-direction:column;gap:6px;min-height:0}
-.scripts-actions{display:flex;align-items:center;gap:8px}
-.scripts-hint{font-size:10px;color:#77798a}
-.scripts-list{flex:1;overflow-y:auto;margin-top:4px;border-top:1px solid #1c1e26}
-.script-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #161924;font-size:11px;cursor:pointer}
-.script-row-main{display:flex;flex-direction:column}
-.script-row.active{background:#101218}
-.script-name{font-weight:500}
-.script-meta{font-size:9px;color:#77798a}
-.script-row-actions{display:flex;gap:6px}
-.script-row-actions button{padding:3px 5px;border-radius:2px;border:1px solid #262833;background:#101218;color:#f5f5f5;font-size:9px;text-transform:uppercase;cursor:pointer}
-.script-row-actions button:hover{border-color:#3b3d49}
-.scripts-viewer-pane{flex:1;background:#050608;border-radius:3px;border:1px solid #1c1e26;display:flex;flex-direction:column;min-width:0;min-height:0}
-.scripts-viewer-header{padding:8px 10px;border-bottom:1px solid #1c1e26;font-size:10px;color:#77798a;display:flex;justify-content:space-between;align-items:center}
-.scripts-viewer-body{flex:1;min-height:0}
-#scriptViewerEmpty{font-size:11px;color:#6b6c76;padding:16px}
-#scriptIframe{width:100%;height:100%;border:0;display:none;background:#111319}
-
-/* Storyboards / Budget / Shooting / Chat share full height */
-#storyboardsTab,#budgetTab,#shootingTab,#chatTab{flex:1;display:none;flex-direction:column;min-height:0}
-
-/* Storyboards */
-.storyboards-toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#050608;border-bottom:1px solid #1c1e26;font-size:11px}
-.storyboards-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:10px 18px 14px 18px}
-.storyboard-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;overflow:hidden}
-.storyboard-image{width:100%;aspect-ratio:16/9;background:#101218;display:flex;align-items:center;justify-content:center;cursor:pointer;border-bottom:1px solid #161924;font-size:11px;color:#77798a}
-.storyboard-image img{width:100%;height:100%;object-fit:cover}
-.storyboard-notes{padding:8px}
-.storyboard-notes textarea{width:100%;background:#101218;color:#f5f5f5;padding:6px;border-radius:3px;border:1px solid #262833;font-size:10px;min-height:50px;font-family:inherit}
-.storyboard-notes textarea:focus{outline:0;border-color:#f5f5f5;background:#111319}
-
-/* Budget */
-.budget-header{padding:10px 18px;background:#050608;border-bottom:1px solid #1c1e26;display:flex;justify-content:space-between;align-items:center;font-size:11px}
-.budget-currency{padding:6px 9px;background:#101218;border-radius:3px;border:1px solid #262833;font-size:11px;color:#f5f5f5}
-.budget-table-wrap{flex:1;overflow-y:auto;padding:10px 18px 0 18px}
-.budget-total{padding:8px 18px;background:#050608;border-top:1px solid #1c1e26;font-weight:500;font-size:11px;display:flex;justify-content:space-between;color:#d4c6b3}
-.delete-btn{background:#101218;border-radius:2px;border:1px solid #262833;color:#a0a1af;padding:3px 6px;font-size:9px;cursor:pointer;text-transform:uppercase}
-.delete-btn:hover{border-color:#3b3d49}
-
-/* Shooting */
-.shooting-wrap{flex:1;overflow-y:auto;padding:10px 18px 0 18px}
-
-/* Chat */
-.chat-container{flex:1;display:flex;flex-direction:column;padding:10px 18px 14px 18px;gap:8px;min-height:0}
-.chat-header-row{display:flex;justify-content:space-between;align-items:center}
-.chat-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.16em}
-.chat-sub{font-size:10px;color:#6b6c76}
-.chat-scope-toggle{display:flex;gap:8px;margin-top:4px}
-.chat-scope-toggle button{flex:0 0 auto;padding:5px 9px;font-size:9px;border-radius:999px;border:1px solid:#262833;background:#101218;color:#e5e6ee;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em}
-.chat-scope-toggle button.active{background:#f5f5f5;color:#050608;border-color:#f5f5f5}
-.chat-help{font-size:9px;color:#6b6c76;margin-top:2px}
-.messages-area{flex:1;overflow-y:auto;margin-top:4px;margin-bottom:8px;background:#0b0d12;padding:9px;border-radius:3px;border:1px solid #1c1e26}
-.message-item{margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #161924}
-.message-text{font-size:11px;color:#f5f5f5;margin-bottom:3px;word-break:break-word}
-.message-file{display:inline-block;padding:4px 7px;background:#101218;border-radius:999px;border:1px solid #262833;font-size:10px;text-decoration:none;color:#f5f5f5;margin:3px 0;cursor:pointer}
-.message-file:hover{border-color:#3b3d49}
-.message-meta{font-size:9px;color:#77798a}
-.input-area{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
-.message-input{flex:1;padding:7px 8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:12px;min-height:32px;color:#f5f5f5}
-.file-preview{padding:4px 7px;background:#101218;border-radius:999px;border:1px solid #262833;font-size:10px;display:flex;justify-content:space-between;align-items:center;width:100%}
-.file-preview button{background:transparent;border:none;color:#a0a1af;cursor:pointer;font-weight:500}
-.attach-btn{padding:6px 8px;background:#101218;border-radius:3px;border:1px solid #262833;cursor:pointer;font-size:10px;font-weight:500;color:#e5e6ee;text-transform:uppercase;letter-spacing:0.12em}
-.send-btn{padding:6px 9px;background:#f5f5f5;border-radius:3px;border:1px solid #f5f5f5;color:#050608;cursor:pointer;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.12em}
-
-/* Settings */
-#settingsView{display:none;flex:1;overflow-y:auto;padding:14px 18px}
-.settings-card{background:#0b0d12;border-radius:3px;border:1px solid #1c1e26;padding:11px 12px;margin-bottom:10px;font-size:11px;color:#b1b2c0}
-.settings-card h3{font-size:12px;margin-bottom:4px;letter-spacing:0.12em;text-transform:uppercase}
+.empty-text{font-size:10px;color:#6b6c76;padding:16px;text-align:center}
 </style></head><body>
 
 <div id="authScreen" class="screen active">
   <div class="auth-screen">
     <div class="auth-box">
       <h1>MAXFILM</h1>
-      <div class="auth-tagline">Producing & Production Management</div>
+      <div class="auth-tagline">Production Management</div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label>Password</label>
         <input type="password" id="password" placeholder="Enter password" onkeypress="if(event.key==='Enter') app.login()">
       </div>
       <button class="auth-btn" onclick="app.login()">Enter</button>
-      <div class="auth-hint">Default password is <b>MAX</b>. Change it in the code.</div>
     </div>
   </div>
 </div>
 
 <div id="appScreen" class="screen">
-  <div class="app-container">
+  <div class="app-wrapper">
     <div class="sidebar">
       <div class="sidebar-header">
         <h2>MAXFILM</h2>
-        <div class="sidebar-sub">Projects · Budget · Days</div>
         <div class="sidebar-nav">
-          <button id="navDashboard" class="active" onclick="app.showMainView('dashboard')">Dashboard</button>
-          <button id="navSettings" onclick="app.showMainView('settings')">Help</button>
+          <button id="navProjects" class="active" onclick="app.showDashboard()">Projects</button>
+          <button id="navProject" style="display:none" onclick="app.openCurrentProject()">Editing</button>
         </div>
       </div>
 
       <div class="sidebar-content">
-        <div class="projects-label-row">
-          <span class="projects-label">Projects</span>
-          <span class="projects-count" id="projectsCountLabel">0</span>
-        </div>
+        <div class="projects-label">My projects</div>
         <div class="project-search">
           <input id="projectSearchInput" type="text" placeholder="Search" oninput="app.filterProjects()">
         </div>
@@ -242,159 +213,139 @@ input[type="file"]{display:none}
       </div>
 
       <div class="sidebar-footer">
-        <button onclick="app.openNewProjectModal()">New</button>
+        <button onclick="app.openNewProjectModal()">New Project</button>
         <button onclick="app.logout()">Logout</button>
       </div>
     </div>
 
-    <div class="main-content">
+    <div class="main">
       <div class="header">
-        <div class="header-left">
-          <div class="header-title" id="headerTitle">Dashboard</div>
-          <div class="header-breadcrumb" id="headerBreadcrumb">All projects</div>
-        </div>
+        <div class="header-title" id="headerTitle">Projects Dashboard</div>
         <div class="header-actions">
-          <button class="btn secondary" onclick="app.openNewProjectModal()">New Project</button>
-          <button class="btn secondary" onclick="app.showMainView('dashboard')">Projects</button>
           <span class="save-indicator" id="saveIndicator">Auto-save on</span>
+          <button class="btn secondary" id="backBtn" style="display:none" onclick="app.showDashboard()">← Back to Projects</button>
         </div>
       </div>
 
-      <div class="content">
-        <!-- Dashboard -->
-        <div id="dashboardView" style="display:flex;flex:1;flex-direction:column;min-height:0">
-          <div class="dashboard">
-            <div class="dashboard-row">
-              <div class="welcome-card">
-                <h3>Producing overview</h3>
-                <p>Use MaxFilm to track projects, finished scripts, budgets, days and decisions in one place.</p>
-                <ul class="welcome-steps">
-                  <li>Create a project for each film or episode.</li>
-                  <li>Upload finished scripts and key materials.</li>
-                  <li>Keep a simple budget and schedule, adjust as things move.</li>
-                </ul>
-              </div>
-              <div class="hint-card">
-                Keep it light: rough numbers and days are better than perfect spreadsheets you never open.
-              </div>
+      <div class="content-area">
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Projects</div>
+              <div class="stat-value" id="totalProjects">0</div>
+              <div class="stat-sub">Active productions</div>
             </div>
-
-            <div style="font-size:11px;font-weight:500;margin-top:4px;text-transform:uppercase;letter-spacing:0.12em;color:#d4c6b3">All projects</div>
-            <div id="allProjects" class="projects-grid" style="margin-top:4px;"></div>
+            <div class="stat-card">
+              <div class="stat-label">Total Budget</div>
+              <div class="stat-value" id="totalBudget">—</div>
+              <div class="stat-sub">Across all projects</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Shooting Days</div>
+              <div class="stat-value" id="totalDays">0</div>
+              <div class="stat-sub">Scheduled</div>
+            </div>
           </div>
+
+          <div class="dashboard-title">All Projects</div>
+          <div class="projects-grid" id="projectsGrid"></div>
         </div>
 
-        <!-- Editor -->
-        <div id="editorView" style="display:none;flex:1;flex-direction:column;min-height:0">
+        <!-- Project Editor -->
+        <div id="projectEditorView" style="display:none;flex:1;flex-direction:column">
           <div class="tabs">
-            <button class="tab active" onclick="app.switchTab('scripts')">Scripts</button>
-            <button class="tab" onclick="app.switchTab('storyboards')">Visuals</button>
-            <button class="tab" onclick="app.switchTab('budget')">Budget</button>
-            <button class="tab" onclick="app.switchTab('shooting')">Shooting</button>
-            <button class="tab" onclick="app.switchTab('chat')">Notes</button>
+            <button class="tab active" onclick="app.switchTab('budget')">💰 Budget</button>
+            <button class="tab" onclick="app.switchTab('shooting')">📅 Shooting Plan</button>
+            <button class="tab" onclick="app.switchTab('scripts')">📄 Scripts</button>
+            <button class="tab" onclick="app.switchTab('visuals')">🎞️ Visuals</button>
+            <button class="tab" onclick="app.switchTab('chat')">💬 Notes</button>
           </div>
 
-          <div class="content">
-            <!-- Scripts -->
-            <div id="scriptsTab">
-              <div class="scripts-header">Script & documents</div>
-              <div class="scripts-body">
-                <div class="scripts-layout">
-                  <div class="scripts-list-pane">
-                    <div class="scripts-actions">
-                      <button class="btn secondary" onclick="document.getElementById('scriptFileInput').click()">Upload file</button>
-                      <input type="file" id="scriptFileInput" accept=".pdf,.fdx,.fdr,.doc,.docx,.txt" onchange="app.handleScriptUpload()">
-                    </div>
-                    <div class="scripts-hint">Upload finished scripts and other important docs. PDFs open on the right so you can read and highlight.</div>
-                    <div class="scripts-list" id="scriptsList"></div>
-                  </div>
-                  <div class="scripts-viewer-pane">
-                    <div class="scripts-viewer-header">
-                      <span id="scriptViewerTitle">No document selected</span>
-                      <span style="font-size:9px;color:#77798a">PDFs open inline · other types may download</span>
-                    </div>
-                    <div class="scripts-viewer-body">
-                      <div id="scriptViewerEmpty">Select a script or document from the left to view it here.</div>
-                      <iframe id="scriptIframe"></iframe>
-                    </div>
-                  </div>
+          <div class="content-area">
+            <!-- Budget Tab -->
+            <div id="budgetTab" class="tab-content active">
+              <div class="budget-top">
+                <div class="budget-stat">
+                  <div class="budget-stat-label">Total Budget</div>
+                  <div class="budget-stat-value"><span id="currencySymbol">kr</span> <span id="budgetTotal">0.00</span></div>
+                </div>
+                <div class="budget-stat">
+                  <div class="budget-stat-label">Categories</div>
+                  <div class="budget-stat-value" id="budgetCategories">0</div>
                 </div>
               </div>
-            </div>
-
-            <!-- Storyboards -->
-            <div id="storyboardsTab">
-              <div class="storyboards-toolbar">
-                <div style="font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase">Visual references</div>
-                <button class="btn secondary" onclick="app.addStoryboard()">Add frame</button>
-              </div>
-              <div class="storyboards-grid" id="storyboardsList"></div>
-            </div>
-
-            <!-- Budget -->
-            <div id="budgetTab">
-              <div class="budget-header">
-                <div>Budget</div>
+              <div class="budget-controls">
                 <select class="budget-currency" id="currencySelect" onchange="app.changeCurrency()">
-                  <option value="NOK">NOK</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                  <option value="SEK">SEK</option>
-                  <option value="DKK">DKK</option>
+                  <option value="NOK">NOK</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="SEK">SEK</option><option value="DKK">DKK</option>
                 </select>
+                <button class="btn secondary" onclick="app.addBudgetLine()">+ Add Line</button>
               </div>
               <div class="budget-table-wrap">
                 <table class="data-table">
-                  <thead>
-                    <tr><th>Category</th><th>Description</th><th>Amount</th><th></th></tr>
-                  </thead>
+                  <thead><tr><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead>
                   <tbody id="budgetList"></tbody>
                 </table>
               </div>
-              <div class="budget-total">
-                <span>Total</span>
-                <span><span id="currencySymbol">kr</span> <span id="budgetTotal">0.00</span></span>
-              </div>
-              <button class="btn secondary" style="margin:8px 18px 12px 18px" onclick="app.addBudgetLine()">Add line</button>
             </div>
 
-            <!-- Shooting -->
-            <div id="shootingTab">
-              <div class="shooting-wrap">
+            <!-- Shooting Tab -->
+            <div id="shootingTab" class="tab-content">
+              <div class="shooting-top">
+                <div class="shooting-stat">
+                  <div class="shooting-stat-label">Total Days</div>
+                  <div class="shooting-stat-value" id="totalShootingDays">0</div>
+                </div>
+                <div class="shooting-stat">
+                  <div class="shooting-stat-label">Locations</div>
+                  <div class="shooting-stat-value" id="uniqueLocations">0</div>
+                </div>
+              </div>
+              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addShootingDay()">+ Add Day</button>
+              <div class="shooting-table-wrap">
                 <table class="data-table">
-                  <thead>
-                    <tr><th>Date</th><th>Location</th><th>Scenes</th><th>Notes</th><th></th></tr>
-                  </thead>
+                  <thead><tr><th>Date</th><th>Location</th><th>Scenes</th><th>Notes</th><th></th></tr></thead>
                   <tbody id="shootingList"></tbody>
                 </table>
               </div>
-              <button class="btn secondary" style="margin:8px 18px 12px 18px" onclick="app.addShootingDay()">Add day</button>
             </div>
 
-            <!-- Chat -->
-            <div id="chatTab">
+            <!-- Scripts Tab -->
+            <div id="scriptsTab" class="tab-content">
+              <div class="scripts-top">
+                <label class="scripts-upload" onclick="document.getElementById('scriptFileInput').click()">
+                  <div class="scripts-upload-icon">📤</div>
+                  <div class="scripts-upload-text">Click to upload scripts or documents</div>
+                  <input type="file" id="scriptFileInput" accept=".pdf,.fdx,.doc,.docx,.txt" onchange="app.handleScriptUpload()">
+                </label>
+                <div class="scripts-list-card">
+                  <div style="font-size:9px;font-weight:600;text-transform:uppercase;color:#6b6c76;margin-bottom:6px">Scripts</div>
+                  <div id="scriptsList" style="display:flex;flex-direction:column;gap:4px"></div>
+                </div>
+              </div>
+              <div class="scripts-viewer">
+                <div class="scripts-viewer-title">PDF Viewer</div>
+                <div id="scriptViewerEmpty" style="text-align:center;color:#6b6c76">Select a PDF to view it here</div>
+                <iframe id="scriptIframe"></iframe>
+              </div>
+            </div>
+
+            <!-- Visuals Tab -->
+            <div id="visualsTab" class="tab-content">
+              <button class="btn secondary" style="margin-bottom:12px" onclick="app.addStoryboard()">+ Add Frame</button>
+              <div class="visuals-grid" id="storyboardsList"></div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div id="chatTab" class="tab-content">
               <div class="chat-container">
-                <div class="chat-header-row">
-                  <div>
-                    <div class="chat-title" id="chatTitle">Notes</div>
-                    <div class="chat-sub" id="chatSubtitle">Per‑project notes or a shared room.</div>
-                  </div>
-                  <div style="font-size:9px;color:#6b6c76">Files stay with messages.</div>
+                <div class="chat-toggle">
+                  <button class="active" id="projectChatBtn" onclick="app.setChatScope('project')">Project Notes</button>
+                  <button id="publicChatBtn" onclick="app.setChatScope('public')">Public Notes</button>
                 </div>
-
-                <div class="chat-scope-toggle">
-                  <button id="projectChatBtn" class="active" onclick="app.setChatScope('project')">Project</button>
-                  <button id="publicChatBtn" onclick="app.setChatScope('public')">Public</button>
-                </div>
-                <div class="chat-help">
-                  Project notes follow this project and are removed if it’s deleted. Public notes are shared across all work.
-                </div>
-
                 <div class="messages-area" id="messagesArea"></div>
-
                 <div class="input-area" id="inputArea">
-                  <input type="text" id="messageInput" class="message-input" placeholder="Write a note">
+                  <input type="text" id="messageInput" class="message-input" placeholder="Add note">
                   <button class="attach-btn" onclick="document.getElementById('fileInput').click()">Attach</button>
                   <button class="send-btn" onclick="app.sendMessage()">Send</button>
                   <input type="file" id="fileInput" onchange="app.handleFileSelect()">
@@ -403,38 +354,25 @@ input[type="file"]{display:none}
             </div>
           </div>
         </div>
-
-        <!-- Settings -->
-        <div id="settingsView">
-          <div class="settings-card">
-            <h3>What this is for</h3>
-            <p>MaxFilm is for producing: projects, finished scripts, budgets, days, and decisions. Write in your screenwriting tool, then upload the documents here.</p>
-          </div>
-          <div class="settings-card">
-            <h3>Flow</h3>
-            <p>1) Create a project. 2) Upload scripts and key docs. 3) Add budget lines and shooting days. 4) Use notes to track decisions.</p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- New project modal -->
-<div id="newProjectModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:50">
-  <div style="background:#0b0d12;border-radius:3px;padding:14px 14px 10px 14px;border:1px solid #1c1e26;min-width:260px;max-width:340px">
-    <div style="font-size:11px;font-weight:500;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.16em">New project</div>
-    <div style="font-size:10px;color:#6b6c76;margin-bottom:8px">Name your production.</div>
-    <input id="newProjectNameInput" type="text" placeholder="Title" style="width:100%;padding:7px 8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:12px;margin-bottom:9px;color:#f5f5f5">
+<div id="newProjectModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:50">
+  <div style="background:#0b0d12;border-radius:3px;padding:14px;border:1px solid #1c1e26;min-width:300px">
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:8px">New Project</div>
+    <input id="newProjectNameInput" type="text" placeholder="Project name" style="width:100%;padding:8px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:12px;margin-bottom:10px;color:#f5f5f5">
     <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button onclick="app.closeNewProjectModal()" style="padding:6px 9px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:10px;cursor:pointer;color:#e5e6ee">Cancel</button>
-      <button onclick="app.createProjectFromModal()" style="padding:6px 11px;border-radius:3px;border:1px solid #f5f5f5;background:#f5f5f5;color:#050608;font-size:10px;font-weight:500;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em">Create</button>
+      <button onclick="app.closeNewProjectModal()" style="padding:6px 10px;border-radius:3px;border:1px solid #262833;background:#101218;font-size:10px;cursor:pointer;color:#e5e6ee">Cancel</button>
+      <button onclick="app.createProjectFromModal()" style="padding:6px 12px;border-radius:3px;border:1px solid #f5f5f5;background:#f5f5f5;color:#050608;font-size:10px;font-weight:600;cursor:pointer;text-transform:uppercase">Create</button>
     </div>
   </div>
 </div>
 
 <script>
-var app = {
+const app = {
   authenticated: false,
   currentProject: null,
   projects: [],
@@ -442,597 +380,477 @@ var app = {
   projectMessages: [],
   selectedFile: null,
   autoSaveInterval: null,
-  currentChatScope: "project",
-  projectFilter: "",
-  selectedScriptId: null,
+  currentChatScope: 'project',
+  projectFilter: '',
 
-  init: function() {},
-
-  login: function() {
-    var value = document.getElementById("password").value;
-    if (value === "MAX") {
+  login() {
+    const pwd = document.getElementById('password').value;
+    if (pwd === 'MAX') {
       this.authenticated = true;
       this.showApp();
       this.loadProjects();
       this.loadPublicMessages();
       this.startAutoSave();
     } else {
-      alert("Wrong password");
+      alert('Wrong password');
     }
   },
 
-  logout: function() {
+  logout() {
     this.authenticated = false;
-    this.currentProject = null;
-    this.projects = [];
-    this.publicMessages = [];
-    this.projectMessages = [];
-    document.getElementById("password").value = "";
     location.reload();
   },
 
-  showApp: function() {
-    document.getElementById("authScreen").classList.remove("active");
-    document.getElementById("appScreen").classList.add("active");
+  showApp() {
+    document.getElementById('authScreen').classList.remove('active');
+    document.getElementById('appScreen').classList.add('active');
   },
 
-  showMainView: function(view) {
-    var dashboard = document.getElementById("dashboardView");
-    var editor = document.getElementById("editorView");
-    var settings = document.getElementById("settingsView");
-
-    document.getElementById("navDashboard").classList.remove("active");
-    document.getElementById("navSettings").classList.remove("active");
-
-    if (view === "dashboard") {
-      dashboard.style.display = "flex";
-      editor.style.display = this.currentProject ? "flex" : "none";
-      settings.style.display = "none";
-      document.getElementById("navDashboard").classList.add("active");
-      document.getElementById("headerTitle").textContent = this.currentProject ? "Project" : "Dashboard";
-      if (this.currentProject) {
-        document.getElementById("headerBreadcrumb").textContent = "Editing project • " + this.currentProject.name;
-      } else {
-        document.getElementById("headerBreadcrumb").textContent = "All projects";
-      }
-    } else if (view === "settings") {
-      dashboard.style.display = "none";
-      editor.style.display = "none";
-      settings.style.display = "block";
-      document.getElementById("navSettings").classList.add("active");
-      document.getElementById("headerTitle").textContent = "Help";
-      document.getElementById("headerBreadcrumb").textContent = "How to use MaxFilm";
-    }
-  },
-
-  startAutoSave: function() {
-    var self = this;
-    this.autoSaveInterval = setInterval(function() {
-      if (self.currentProject) self.autoSaveProject();
+  startAutoSave() {
+    this.autoSaveInterval = setInterval(() => {
+      if (this.currentProject) this.autoSaveProject();
     }, 5000);
   },
 
-  autoSaveProject: async function() {
+  async autoSaveProject() {
     if (!this.currentProject) return;
     this.currentProject.updatedAt = new Date().toLocaleDateString();
-    await fetch("/api/projects", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(this.currentProject)
     });
-    var el = document.getElementById("saveIndicator");
-    if (el) el.textContent = "Last saved " + new Date().toLocaleTimeString();
+    document.getElementById('saveIndicator').textContent = 'Last saved ' + new Date().toLocaleTimeString();
   },
 
-  loadProjects: async function() {
-    var res = await fetch("/api/projects");
+  async loadProjects() {
+    const res = await fetch('/api/projects');
     this.projects = await res.json();
     this.renderDashboard();
   },
 
-  loadPublicMessages: async function() {
-    var res = await fetch("/api/messages?scope=public");
+  async loadPublicMessages() {
+    const res = await fetch('/api/messages?scope=public');
     this.publicMessages = await res.json();
   },
 
-  loadProjectMessages: async function() {
+  async loadProjectMessages() {
     if (!this.currentProject) return;
-    var res = await fetch("/api/messages?scope=project&projectId=" + this.currentProject.id);
+    const res = await fetch('/api/messages?scope=project&projectId=' + this.currentProject.id);
     this.projectMessages = await res.json();
   },
 
-  renderDashboard: function() {
-    var countLabel = document.getElementById("projectsCountLabel");
-    countLabel.textContent = this.projects.length + " total";
+  showDashboard() {
+    this.currentProject = null;
+    document.getElementById('dashboardView').style.display = 'block';
+    document.getElementById('projectEditorView').style.display = 'none';
+    document.getElementById('navProjects').classList.add('active');
+    document.getElementById('navProject').style.display = 'none';
+    document.getElementById('backBtn').style.display = 'none';
+    document.getElementById('headerTitle').textContent = 'Projects Dashboard';
+    this.renderDashboard();
+  },
 
-    var filtered = this.getFilteredProjects();
-    var html = filtered.map(function(p) {
-      return '' +
-        '<div class="project-card" onclick="app.openProject(' + "'" + p.id + "'" + ')">' +
-          '<div class="project-card-header">' +
-            '<div>' +
-              '<h4>' + p.name + '</h4>' +
-              '<div class="project-meta">Updated ' + (p.updatedAt || "-") + '</div>' +
-            '</div>' +
-            '<span class="project-chip">' + ((p.shooting && p.shooting.length) ? "In progress" : "Planning") + '</span>' +
-          '</div>' +
-          '<div class="project-card-actions">' +
-            '<button onclick="event.stopPropagation();app.openProject(' + "'" + p.id + "'" + ')">Open</button>' +
-            '<button onclick="event.stopPropagation();app.deleteProject(' + "'" + p.id + "'" + ')">Delete</button>' +
-          '</div>' +
-        '</div>';
-    }).join("");
-    document.getElementById("allProjects").innerHTML = html || '<div class="empty-text">No projects yet. Create one to start.</div>';
+  renderDashboard() {
+    const stats = {
+      totalProjects: this.projects.length,
+      totalBudget: this.projects.reduce((sum, p) => sum + (p.budget?.items || []).reduce((s, i) => s + (parseFloat(i.amount) || 0), 0), 0),
+      totalDays: this.projects.reduce((sum, p) => sum + (p.shooting?.length || 0), 0)
+    };
+
+    document.getElementById('totalProjects').textContent = stats.totalProjects;
+    document.getElementById('totalBudget').textContent = stats.totalBudget > 0 ? 'kr ' + stats.totalBudget.toFixed(0) : '—';
+    document.getElementById('totalDays').textContent = stats.totalDays;
+
+    const filtered = this.getFilteredProjects();
+    const html = filtered.map(p => `
+      <div class="project-card" onclick="app.openProject('${p.id}')">
+        <div class="project-card-header">
+          <div><h4>${p.name}</h4><div class="project-meta">Updated ${p.updatedAt || '—'}</div></div>
+          <span class="project-chip">${(p.shooting?.length || 0) > 0 ? 'Shooting' : 'Planning'}</span>
+        </div>
+        <div class="project-card-actions">
+          <button onclick="event.stopPropagation();app.openProject('${p.id}')">Open</button>
+          <button onclick="event.stopPropagation();app.deleteProject('${p.id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('projectsGrid').innerHTML = html || '<div class="empty-text">No projects. Create one to start.</div>';
     this.renderSidebar();
   },
 
-  renderSidebar: function() {
-    var container = document.getElementById("projectsList");
-    var filtered = this.getFilteredProjects();
-    var html = filtered.map(function(p) {
-      var isActive = (app.currentProject && app.currentProject.id == p.id) ? " active" : "";
-      return '' +
-        '<button class="sidebar-btn' + isActive + '" onclick="app.openProject(' + "'" + p.id + "'" + ')">' +
-          '<div>' + p.name + '</div>' +
-          '<span>' + (p.updatedAt || "Not saved yet") + '</span>' +
-        '</button>';
-    }).join("");
-    container.innerHTML = html || '<div class="empty-text" style="padding:4px 4px 0 4px;">No projects</div>';
+  renderSidebar() {
+    const filtered = this.getFilteredProjects();
+    const html = filtered.map(p => {
+      const isActive = this.currentProject && this.currentProject.id === p.id ? ' active' : '';
+      return `<button class="sidebar-btn${isActive}" onclick="app.openProject('${p.id}')">${p.name}</button>`;
+    }).join('');
+    document.getElementById('projectsList').innerHTML = html || '<div class="empty-text" style="padding:6px">No projects</div>';
   },
 
-  getFilteredProjects: function() {
+  getFilteredProjects() {
     if (!this.projectFilter) return this.projects;
-    var f = this.projectFilter.toLowerCase();
-    return this.projects.filter(function(p) {
-      return (p.name || "").toLowerCase().indexOf(f) !== -1;
-    });
+    const f = this.projectFilter.toLowerCase();
+    return this.projects.filter(p => (p.name || '').toLowerCase().includes(f));
   },
 
-  filterProjects: function() {
-    var value = document.getElementById("projectSearchInput").value || "";
-    this.projectFilter = value;
+  filterProjects() {
+    this.projectFilter = document.getElementById('projectSearchInput').value || '';
     this.renderDashboard();
   },
 
-  openNewProjectModal: function() {
-    document.getElementById("newProjectNameInput").value = "";
-    document.getElementById("newProjectModal").style.display = "flex";
-    setTimeout(function() {
-      document.getElementById("newProjectNameInput").focus();
-    }, 20);
+  openNewProjectModal() {
+    document.getElementById('newProjectNameInput').value = '';
+    document.getElementById('newProjectModal').style.display = 'flex';
+    setTimeout(() => document.getElementById('newProjectNameInput').focus(), 20);
   },
 
-  closeNewProjectModal: function() {
-    document.getElementById("newProjectModal").style.display = "none";
+  closeNewProjectModal() {
+    document.getElementById('newProjectModal').style.display = 'none';
   },
 
-  createProjectFromModal: function() {
-    var name = document.getElementById("newProjectNameInput").value.trim();
+  createProjectFromModal() {
+    const name = document.getElementById('newProjectNameInput').value.trim();
     if (!name) return;
     this.closeNewProjectModal();
-    this.createProject(name);
-  },
-
-  createProject: function(name) {
     this.currentProject = {
       id: Date.now(),
-      name: name,
+      name,
       scripts: [],
       storyboards: [],
-      budget: { currency: "NOK", items: [] },
+      budget: { currency: 'NOK', items: [] },
       shooting: [],
       updatedAt: new Date().toLocaleDateString()
     };
-    this.selectedScriptId = null;
-    this.showEditor();
-    this.renderEditor();
-    this.loadProjectMessages();
+    this.showProjectEditor();
+    this.renderProjectEditor();
   },
 
-  showEditor: function() {
-    document.getElementById("dashboardView").style.display = "flex";
-    document.getElementById("editorView").style.display = "flex";
-    document.getElementById("settingsView").style.display = "none";
-    document.getElementById("navDashboard").classList.add("active");
-    document.getElementById("navSettings").classList.remove("active");
-    document.getElementById("headerTitle").textContent = "Project";
-    document.getElementById("headerBreadcrumb").textContent = "Editing project • " + this.currentProject.name;
-  },
-
-  openProject: function(id) {
-    this.currentProject = this.projects.find(function(p) { return p.id == id; });
-    if (!this.currentProject.scripts) this.currentProject.scripts = [];
-    this.selectedScriptId = null;
-    this.showEditor();
-    this.renderEditor();
-    this.loadProjectMessages();
-  },
-
-  deleteProject: async function(id) {
-    if (!confirm("Delete this project and its project chat?")) return;
-    await fetch("/api/projects/" + id, { method: "DELETE" });
-    this.projects = this.projects.filter(function(p) { return p.id != id; });
-    if (this.currentProject && this.currentProject.id == id) {
-      this.currentProject = null;
-      document.getElementById("editorView").style.display = "none";
-      document.getElementById("headerTitle").textContent = "Dashboard";
-      document.getElementById("headerBreadcrumb").textContent = "All projects";
-    }
-    this.renderDashboard();
-  },
-
-  switchTab: function(tab) {
-    if (tab === "chat") {
-      this.setChatScope("project");
-      this.renderChat();
-    }
-    var tabs = document.querySelectorAll('[id$="Tab"]');
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].style.display = "none";
-    }
-    var tabButtons = document.querySelectorAll(".tab");
-    for (var j = 0; j < tabButtons.length; j++) {
-      tabButtons[j].classList.remove("active");
-    }
-    document.getElementById(tab + "Tab").style.display = (tab === "scripts") ? "flex" : "flex";
-    event.target.classList.add("active");
-  },
-
-  /* Scripts: upload + viewer */
-  handleScriptUpload: function() {
+  openProject(id) {
+    this.currentProject = this.projects.find(p => p.id === id);
     if (!this.currentProject) return;
-    var input = document.getElementById("scriptFileInput");
-    var file = input.files[0];
+    if (!this.currentProject.scripts) this.currentProject.scripts = [];
+    this.showProjectEditor();
+    this.renderProjectEditor();
+    this.loadProjectMessages();
+  },
+
+  showProjectEditor() {
+    document.getElementById('dashboardView').style.display = 'none';
+    document.getElementById('projectEditorView').style.display = 'flex';
+    document.getElementById('navProjects').classList.remove('active');
+    document.getElementById('navProject').style.display = 'inline-block';
+    document.getElementById('navProject').classList.add('active');
+    document.getElementById('backBtn').style.display = 'inline-block';
+    document.getElementById('headerTitle').textContent = this.currentProject.name;
+  },
+
+  openCurrentProject() {
+    if (this.currentProject) this.showProjectEditor();
+  },
+
+  async deleteProject(id) {
+    if (!confirm('Delete this project?')) return;
+    await fetch('/api/projects/' + id, { method: 'DELETE' });
+    this.projects = this.projects.filter(p => p.id !== id);
+    if (this.currentProject?.id === id) this.showDashboard();
+    else this.renderDashboard();
+  },
+
+  switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(tabName + 'Tab').classList.add('active');
+    event.target.classList.add('active');
+  },
+
+  renderProjectEditor() {
+    document.getElementById('currencySelect').value = this.currentProject.budget.currency || 'NOK';
+    this.updateCurrencySymbol();
+    this.renderBudget();
+    this.renderShooting();
+    this.renderScripts();
+    this.renderStoryboards();
+  },
+
+  /* Budget */
+  addBudgetLine() {
+    this.currentProject.budget.items.push({ id: Date.now(), category: '', description: '', amount: 0 });
+    this.renderBudget();
+  },
+
+  renderBudget() {
+    const items = this.currentProject.budget.items || [];
+    const rows = items.map(item => `
+      <tr>
+        <td><input type="text" value="${item.category}" onchange="app.updateBudget(${item.id}, 'category', this.value)"></td>
+        <td><input type="text" value="${item.description}" onchange="app.updateBudget(${item.id}, 'description', this.value)"></td>
+        <td><input type="number" value="${item.amount}" onchange="app.updateBudget(${item.id}, 'amount', this.value)"></td>
+        <td><button class="delete-btn" onclick="app.deleteBudgetLine(${item.id})">Delete</button></td>
+      </tr>
+    `).join('');
+    document.getElementById('budgetList').innerHTML = rows || '<tr><td colspan="4" class="empty-text">No budget lines</td></tr>';
+    const total = items.reduce((sum, i) => sum + (parseFloat(i.amount) || 0), 0);
+    document.getElementById('budgetTotal').textContent = total.toFixed(2);
+    document.getElementById('budgetCategories').textContent = new Set(items.map(i => i.category)).size;
+  },
+
+  updateBudget(id, field, value) {
+    const item = this.currentProject.budget.items.find(i => i.id === id);
+    if (!item) return;
+    item[field] = field === 'amount' ? parseFloat(value) || 0 : value;
+    this.renderBudget();
+  },
+
+  deleteBudgetLine(id) {
+    this.currentProject.budget.items = this.currentProject.budget.items.filter(i => i.id !== id);
+    this.renderBudget();
+  },
+
+  changeCurrency() {
+    const value = document.getElementById('currencySelect').value;
+    this.currentProject.budget.currency = value;
+    this.updateCurrencySymbol();
+  },
+
+  updateCurrencySymbol() {
+    const value = document.getElementById('currencySelect').value;
+    const map = { NOK: 'kr', USD: '$', EUR: '€', GBP: '£', SEK: 'kr', DKK: 'kr' };
+    document.getElementById('currencySymbol').textContent = map[value] || '$';
+  },
+
+  /* Shooting */
+  addShootingDay() {
+    this.currentProject.shooting.push({ id: Date.now(), date: '', location: '', scenes: '', notes: '' });
+    this.renderShooting();
+  },
+
+  renderShooting() {
+    const days = this.currentProject.shooting || [];
+    const rows = days.map(day => `
+      <tr>
+        <td><input type="text" value="${day.date}" onchange="app.updateShooting(${day.id}, 'date', this.value)"></td>
+        <td><input type="text" value="${day.location}" onchange="app.updateShooting(${day.id}, 'location', this.value)"></td>
+        <td><input type="text" value="${day.scenes}" onchange="app.updateShooting(${day.id}, 'scenes', this.value)"></td>
+        <td><input type="text" value="${day.notes}" onchange="app.updateShooting(${day.id}, 'notes', this.value)"></td>
+        <td><button class="delete-btn" onclick="app.deleteShootingDay(${day.id})">Delete</button></td>
+      </tr>
+    `).join('');
+    document.getElementById('shootingList').innerHTML = rows || '<tr><td colspan="5" class="empty-text">No shooting days</td></tr>';
+    document.getElementById('totalShootingDays').textContent = days.length;
+    const locs = new Set(days.map(d => d.location).filter(l => l));
+    document.getElementById('uniqueLocations').textContent = locs.size;
+  },
+
+  updateShooting(id, field, value) {
+    const day = this.currentProject.shooting.find(d => d.id === id);
+    if (day) day[field] = value;
+  },
+
+  deleteShootingDay(id) {
+    this.currentProject.shooting = this.currentProject.shooting.filter(d => d.id !== id);
+    this.renderShooting();
+  },
+
+  /* Scripts */
+  handleScriptUpload() {
+    const file = document.getElementById('scriptFileInput').files[0];
     if (!file) return;
-    var self = this;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      if (!self.currentProject.scripts) self.currentProject.scripts = [];
-      var scriptObj = {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.currentProject.scripts.push({
         id: Date.now(),
         name: file.name,
         size: file.size,
         type: file.type,
         data: e.target.result,
         uploadedAt: new Date().toLocaleString()
-      };
-      self.currentProject.scripts.push(scriptObj);
-      self.selectedScriptId = scriptObj.id;
-      self.renderScripts();
-      self.showScript(scriptObj.id);
-      input.value = "";
+      });
+      this.renderScripts();
+      document.getElementById('scriptFileInput').value = '';
     };
     reader.readAsDataURL(file);
   },
 
-  renderScripts: function() {
-    var list = document.getElementById("scriptsList");
-    var scripts = this.currentProject && this.currentProject.scripts ? this.currentProject.scripts : [];
-    if (!scripts.length) {
-      list.innerHTML = '<div class="empty-text" style="padding:8px 0;">No documents uploaded.</div>';
-      document.getElementById("scriptViewerTitle").textContent = "No document selected";
-      document.getElementById("scriptViewerEmpty").style.display = "block";
-      document.getElementById("scriptIframe").style.display = "none";
-      return;
-    }
-    var self = this;
-    var html = scripts.map(function(s) {
-      var activeCls = (self.selectedScriptId === s.id) ? " script-row active" : " script-row";
-      return '' +
-        '<div class="' + activeCls + '" onclick="app.showScript(' + s.id + ')">' +
-          '<div class="script-row-main">' +
-            '<div class="script-name">' + s.name + '</div>' +
-            '<div class="script-meta">' + Math.round(s.size / 1024) + ' KB · ' + (s.uploadedAt || '') + '</div>' +
-          '</div>' +
-          '<div class="script-row-actions" onclick="event.stopPropagation()">' +
-            '<button onclick="app.downloadScript(' + s.id + ')">DL</button>' +
-            '<button onclick="app.deleteScript(' + s.id + ')">Del</button>' +
-          '</div>' +
-        '</div>';
-    }).join("");
-    list.innerHTML = html;
+  renderScripts() {
+    const scripts = this.currentProject.scripts || [];
+    const html = scripts.map(s => `
+      <div class="script-item" onclick="app.showScript(${s.id})">
+        ${s.name}
+        <button onclick="event.stopPropagation();app.deleteScript(${s.id})" style="float:right;background:none;border:none;color:#a0a1af;cursor:pointer">✕</button>
+      </div>
+    `).join('');
+    document.getElementById('scriptsList').innerHTML = html || '<div class="empty-text">No scripts uploaded</div>';
   },
 
-  showScript: function(id) {
-    if (!this.currentProject || !this.currentProject.scripts) return;
-    this.selectedScriptId = id;
-    var s = this.currentProject.scripts.find(function(x) { return x.id === id; });
+  showScript(id) {
+    const s = this.currentProject.scripts.find(x => x.id === id);
     if (!s) return;
-    this.renderScripts(); // refresh active highlight
-    var viewerTitle = document.getElementById("scriptViewerTitle");
-    var empty = document.getElementById("scriptViewerEmpty");
-    var iframe = document.getElementById("scriptIframe");
-    viewerTitle.textContent = s.name;
-    if (s.type && s.type.indexOf("pdf") !== -1 || (s.name || "").toLowerCase().endsWith(".pdf")) {
-      iframe.src = s.data;
-      iframe.style.display = "block";
-      empty.style.display = "none";
+    if (s.type?.includes('pdf') || s.name?.endsWith('.pdf')) {
+      document.getElementById('scriptViewerEmpty').style.display = 'none';
+      document.getElementById('scriptIframe').style.display = 'block';
+      document.getElementById('scriptIframe').src = s.data;
     } else {
-      // For non-PDF, fallback: just download
-      iframe.style.display = "none";
-      empty.style.display = "block";
-      empty.textContent = "Preview not available for this file type. Use Download to open it.";
+      document.getElementById('scriptViewerEmpty').style.display = 'block';
+      document.getElementById('scriptViewerEmpty').textContent = 'Preview not available. Click to download: ' + s.name;
+      document.getElementById('scriptViewerEmpty').style.cursor = 'pointer';
+      document.getElementById('scriptViewerEmpty').onclick = () => this.downloadScript(id);
+      document.getElementById('scriptIframe').style.display = 'none';
     }
   },
 
-  downloadScript: function(id) {
-    if (!this.currentProject || !this.currentProject.scripts) return;
-    var s = this.currentProject.scripts.find(function(x) { return x.id === id; });
+  downloadScript(id) {
+    const s = this.currentProject.scripts.find(x => x.id === id);
     if (!s) return;
-    var a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = s.data;
     a.download = s.name;
     a.click();
   },
 
-  deleteScript: function(id) {
-    if (!this.currentProject || !this.currentProject.scripts) return;
-    this.currentProject.scripts = this.currentProject.scripts.filter(function(x) { return x.id !== id; });
-    if (this.selectedScriptId === id) {
-      this.selectedScriptId = null;
-      document.getElementById("scriptViewerTitle").textContent = "No document selected";
-      document.getElementById("scriptViewerEmpty").style.display = "block";
-      document.getElementById("scriptIframe").style.display = "none";
-    }
+  deleteScript(id) {
+    this.currentProject.scripts = this.currentProject.scripts.filter(x => x.id !== id);
     this.renderScripts();
   },
 
-  /* Editor sections */
-  renderEditor: function() {
-    document.getElementById("currencySelect").value = this.currentProject.budget.currency || "NOK";
-    this.updateCurrencySymbol();
-    this.renderScripts();
-    this.renderStoryboards();
-    this.renderBudget();
-    this.renderShooting();
-    this.currentChatScope = "project";
-    this.setChatScope("project");
-  },
-
-  addStoryboard: function() {
-    this.currentProject.storyboards.push({ id: Date.now(), image: null, notes: "" });
+  /* Storyboards */
+  addStoryboard() {
+    this.currentProject.storyboards.push({ id: Date.now(), image: null, notes: '' });
     this.renderStoryboards();
   },
 
-  renderStoryboards: function() {
-    var items = this.currentProject.storyboards || [];
-    var html = items.map(function(sb) {
-      return '' +
-        '<div class="storyboard-card">' +
-          '<label class="storyboard-image">' +
-            (sb.image ? '<img src="' + sb.image + '">' : 'Upload frame') +
-            '<input type="file" accept="image/*" onchange="app.uploadStoryboard(' + sb.id + ', this)">' +
-          '</label>' +
-          '<div class="storyboard-notes">' +
-            '<textarea placeholder="Notes" onchange="app.updateStoryNotes(' + sb.id + ', this.value)">' + (sb.notes || "") + '</textarea>' +
-          '</div>' +
-        '</div>';
-    }).join("");
-    document.getElementById("storyboardsList").innerHTML = html || '<div class="empty-text">No frames. Add key visual references.</div>';
+  renderStoryboards() {
+    const items = this.currentProject.storyboards || [];
+    const html = items.map(sb => `
+      <div class="visual-card">
+        <label class="visual-image">
+          ${sb.image ? `<img src="${sb.image}">` : 'Upload frame'}
+          <input type="file" accept="image/*" onchange="app.uploadStoryboard(${sb.id}, this)">
+        </label>
+        <div class="visual-notes">
+          <textarea placeholder="Notes" onchange="app.updateStoryNotes(${sb.id}, this.value)">${sb.notes || ''}</textarea>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('storyboardsList').innerHTML = html || '<div class="empty-text">No frames</div>';
   },
 
-  uploadStoryboard: function(id, input) {
-    var file = input.files[0];
+  uploadStoryboard(id, input) {
+    const file = input.files[0];
     if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var item = app.currentProject.storyboards.find(function(s) { return s.id === id; });
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const item = this.currentProject.storyboards.find(s => s.id === id);
       if (item) {
         item.image = e.target.result;
-        app.renderStoryboards();
+        this.renderStoryboards();
       }
     };
     reader.readAsDataURL(file);
   },
 
-  updateStoryNotes: function(id, value) {
-    var item = this.currentProject.storyboards.find(function(s) { return s.id === id; });
+  updateStoryNotes(id, value) {
+    const item = this.currentProject.storyboards.find(s => s.id === id);
     if (item) item.notes = value;
   },
 
-  changeCurrency: function() {
-    var value = document.getElementById("currencySelect").value;
-    this.currentProject.budget.currency = value;
-    this.updateCurrencySymbol();
-    this.renderBudget();
-  },
-
-  updateCurrencySymbol: function() {
-    var value = document.getElementById("currencySelect").value;
-    var map = { NOK: "kr", USD: "$", EUR: "€", GBP: "£", SEK: "kr", DKK: "kr" };
-    document.getElementById("currencySymbol").textContent = map[value] || "$";
-  },
-
-  addBudgetLine: function() {
-    this.currentProject.budget.items.push({ id: Date.now(), category: "", description: "", amount: 0 });
-    this.renderBudget();
-  },
-
-  renderBudget: function() {
-    var items = this.currentProject.budget.items || [];
-    var rows = items.map(function(item) {
-      return '' +
-        '<tr>' +
-          '<td><input type="text" value="' + item.category + '" onchange="app.updateBudget(' + item.id + ', ' + "'category'" + ', this.value)"></td>' +
-          '<td><input type="text" value="' + item.description + '" onchange="app.updateBudget(' + item.id + ', ' + "'description'" + ', this.value)"></td>' +
-          '<td><input type="number" value="' + item.amount + '" onchange="app.updateBudget(' + item.id + ', ' + "'amount'" + ', this.value)"></td>' +
-          '<td><button class="delete-btn" onclick="app.deleteBudgetLine(' + item.id + ')">Delete</button></td>' +
-        '</tr>';
-    }).join("");
-    document.getElementById("budgetList").innerHTML = rows || '<tr><td colspan="4" class="empty-text">No budget lines yet.</td></tr>';
-    var total = items.reduce(function(sum, i) {
-      return sum + (parseFloat(i.amount) || 0);
-    }, 0);
-    document.getElementById("budgetTotal").textContent = total.toFixed(2);
-  },
-
-  updateBudget: function(id, field, value) {
-    var item = this.currentProject.budget.items.find(function(i) { return i.id === id; });
-    if (!item) return;
-    if (field === "amount") {
-      item[field] = parseFloat(value) || 0;
-    } else {
-      item[field] = value;
-    }
-    this.renderBudget();
-  },
-
-  deleteBudgetLine: function(id) {
-    this.currentProject.budget.items = this.currentProject.budget.items.filter(function(i) { return i.id !== id; });
-    this.renderBudget();
-  },
-
-  addShootingDay: function() {
-    this.currentProject.shooting.push({ id: Date.now(), date: "", location: "", scenes: "", notes: "" });
-    this.renderShooting();
-  },
-
-  renderShooting: function() {
-    var days = this.currentProject.shooting || [];
-    var rows = days.map(function(day) {
-      return '' +
-        '<tr>' +
-          '<td><input type="text" value="' + day.date + '" onchange="app.updateShooting(' + day.id + ', ' + "'date'" + ', this.value)"></td>' +
-          '<td><input type="text" value="' + day.location + '" onchange="app.updateShooting(' + day.id + ', ' + "'location'" + ', this.value)"></td>' +
-          '<td><input type="text" value="' + day.scenes + '" onchange="app.updateShooting(' + day.id + ', ' + "'scenes'" + ', this.value)"></td>' +
-          '<td><input type="text" value="' + day.notes + '" onchange="app.updateShooting(' + day.id + ', ' + "'notes'" + ', this.value)"></td>' +
-          '<td><button class="delete-btn" onclick="app.deleteShootingDay(' + day.id + ')">Delete</button></td>' +
-        '</tr>';
-    }).join("");
-    document.getElementById("shootingList").innerHTML = rows || '<tr><td colspan="5" class="empty-text">No shooting days yet.</td></tr>';
-  },
-
-  updateShooting: function(id, field, value) {
-    var day = this.currentProject.shooting.find(function(d) { return d.id === id; });
-    if (day) day[field] = value;
-  },
-
-  deleteShootingDay: function(id) {
-    this.currentProject.shooting = this.currentProject.shooting.filter(function(d) { return d.id !== id; });
-    this.renderShooting();
-  },
-
   /* Chat */
-  handleFileSelect: function() {
-    var file = document.getElementById("fileInput").files[0];
+  handleFileSelect() {
+    const file = document.getElementById('fileInput').files[0];
     if (!file) return;
     this.selectedFile = { name: file.name, type: file.type, size: file.size };
-    var reader = new FileReader();
-    var self = this;
-    reader.onload = function(e) {
-      self.selectedFile.data = e.target.result;
-      self.showFilePreview();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.selectedFile.data = e.target.result;
+      this.showFilePreview();
     };
     reader.readAsDataURL(file);
   },
 
-  showFilePreview: function() {
-    var inputArea = document.getElementById("inputArea");
-    var existing = inputArea.querySelector(".file-preview");
+  showFilePreview() {
+    const inputArea = document.getElementById('inputArea');
+    const existing = inputArea.querySelector('.file-preview');
     if (existing) existing.remove();
-    var div = document.createElement("div");
-    div.className = "file-preview";
-    div.innerHTML = "File: " + this.selectedFile.name + ' <button onclick="app.removeFile()" type="button">x</button>';
-    inputArea.insertBefore(div, inputArea.querySelector(".message-input").nextSibling);
+    const div = document.createElement('div');
+    div.className = 'file-preview';
+    div.innerHTML = `${this.selectedFile.name} <button onclick="app.removeFile()" type="button">✕</button>`;
+    inputArea.insertBefore(div, inputArea.querySelector('.message-input').nextSibling);
   },
 
-  removeFile: function() {
+  removeFile() {
     this.selectedFile = null;
-    document.getElementById("fileInput").value = "";
-    var existing = document.getElementById("inputArea").querySelector(".file-preview");
+    document.getElementById('fileInput').value = '';
+    const existing = document.getElementById('inputArea').querySelector('.file-preview');
     if (existing) existing.remove();
   },
 
-  sendMessage: async function() {
-    var text = document.getElementById("messageInput").value;
+  async sendMessage() {
+    const text = document.getElementById('messageInput').value;
     if (!text && !this.selectedFile) return;
-    var scope = this.currentChatScope === "public" ? "public" : "project";
-    var projectId = (scope === "project" && this.currentProject) ? this.currentProject.id : null;
+    const scope = this.currentChatScope;
+    const projectId = scope === 'project' ? this.currentProject.id : null;
 
-    await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: Date.now(),
-        text: text,
+        text,
         file: this.selectedFile,
         timestamp: new Date().toLocaleString(),
-        scope: scope,
-        projectId: projectId
+        scope,
+        projectId
       })
     });
 
-    document.getElementById("messageInput").value = "";
+    document.getElementById('messageInput').value = '';
     this.removeFile();
-
-    if (scope === "public") {
-      await this.loadPublicMessages();
-    } else {
-      await this.loadProjectMessages();
-    }
+    if (scope === 'public') await this.loadPublicMessages();
+    else await this.loadProjectMessages();
     this.renderChat();
   },
 
-  downloadFile: function(data, name) {
-    var a = document.createElement("a");
+  downloadFile(data, name) {
+    const a = document.createElement('a');
     a.href = data;
     a.download = name;
     a.click();
   },
 
-  setChatScope: function(scope) {
+  setChatScope(scope) {
     this.currentChatScope = scope;
-    var projectBtn = document.getElementById("projectChatBtn");
-    var publicBtn = document.getElementById("publicChatBtn");
-    if (projectBtn && publicBtn) {
-      projectBtn.classList.remove("active");
-      publicBtn.classList.remove("active");
-      if (scope === "project") projectBtn.classList.add("active");
-      else publicBtn.classList.add("active");
-    }
-    if (scope === "project") {
-      this.loadProjectMessages().then(this.renderChat.bind(this));
+    document.getElementById('projectChatBtn').classList.remove('active');
+    document.getElementById('publicChatBtn').classList.remove('active');
+    if (scope === 'project') {
+      document.getElementById('projectChatBtn').classList.add('active');
+      this.loadProjectMessages().then(() => this.renderChat());
     } else {
-      this.loadPublicMessages().then(this.renderChat.bind(this));
+      document.getElementById('publicChatBtn').classList.add('active');
+      this.renderChat();
     }
   },
 
-  renderChat: function() {
-    var messages;
-    var title;
-    if (this.currentChatScope === "public") {
-      messages = this.publicMessages;
-      title = "Public room";
-    } else {
-      messages = this.projectMessages;
-      title = this.currentProject ? "Project · " + this.currentProject.name : "Project notes";
-    }
-    var html = messages.map(function(m) {
-      var fileHtml = "";
-      if (m.file) {
-        fileHtml = '<br><a class="message-file" onclick="app.downloadFile(' + "'" + m.file.data + "'" + ',' + "'" + m.file.name + "'" + ')">File: ' + m.file.name + '</a>';
-      }
-      return '' +
-        '<div class="message-item">' +
-          '<div class="message-text">' +
-            (m.text || "") + fileHtml +
-          '</div>' +
-          '<div class="message-meta">' + m.timestamp + '</div>' +
-        '</div>';
-    }).join("");
-    document.getElementById("messagesArea").innerHTML = html || '<div class="empty-text">' + title + ' is empty.</div>';
-    var area = document.getElementById("messagesArea");
+  renderChat() {
+    const messages = this.currentChatScope === 'public' ? this.publicMessages : this.projectMessages;
+    const html = messages.map(m => {
+      const fileHtml = m.file ? `<br><a class="message-file" onclick="app.downloadFile('${m.file.data}','${m.file.name}')">📎 ${m.file.name}</a>` : '';
+      return `
+        <div class="message-item">
+          <div class="message-text">${m.text || ''}${fileHtml}</div>
+          <div class="message-meta">${m.timestamp}</div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('messagesArea').innerHTML = html || '<div class="empty-text">No notes yet</div>';
+    const area = document.getElementById('messagesArea');
     area.scrollTop = area.scrollHeight;
-    document.getElementById("chatTitle").textContent = title;
   }
 };
 
-app.init();
-</script>
-</body></html>`);
+app.init = function() {};
+</script></body></html>`);
 });
-
-/* API */
 
 app.get('/api/projects', (req, res) => {
   const db = loadDB();
@@ -1048,12 +866,7 @@ app.post('/api/projects', (req, res) => {
     project = { id, name, scripts, storyboards, budget, shooting, updatedAt };
     db.projects.push(project);
   } else {
-    project.name = name;
-    project.scripts = scripts;
-    project.storyboards = storyboards;
-    project.budget = budget;
-    project.shooting = shooting;
-    project.updatedAt = updatedAt;
+    Object.assign(project, { name, scripts, storyboards, budget, shooting, updatedAt });
   }
 
   saveDB(db);
@@ -1063,16 +876,10 @@ app.post('/api/projects', (req, res) => {
 app.delete('/api/projects/:id', (req, res) => {
   const db = loadDB();
   const id = String(req.params.id);
-
   db.projects = db.projects.filter(p => String(p.id) !== id);
-
-  // delete project chat messages for this project
   if (db.messages && Array.isArray(db.messages)) {
-    db.messages = db.messages.filter(
-      m => !(m.scope === 'project' && String(m.projectId) === id)
-    );
+    db.messages = db.messages.filter(m => !(m.scope === 'project' && String(m.projectId) === id));
   }
-
   saveDB(db);
   res.json({ success: true });
 });
@@ -1081,28 +888,17 @@ app.get('/api/messages', (req, res) => {
   const db = loadDB();
   const scope = req.query.scope;
   const projectId = req.query.projectId;
-
   let messages = db.messages || [];
-
-  if (scope) {
-    messages = messages.filter(m => m.scope === scope);
-  }
-  if (scope === 'project' && projectId) {
-    messages = messages.filter(m => String(m.projectId) === String(projectId));
-  }
-
+  if (scope) messages = messages.filter(m => m.scope === scope);
+  if (scope === 'project' && projectId) messages = messages.filter(m => String(m.projectId) === String(projectId));
   res.json(messages);
 });
 
 app.post('/api/messages', (req, res) => {
   const db = loadDB();
   if (!db.messages) db.messages = [];
-
   const message = req.body || {};
-  if (!message.scope) {
-    message.scope = 'public';
-  }
-
+  if (!message.scope) message.scope = 'public';
   db.messages.push(message);
   saveDB(db);
   res.json({ success: true });
